@@ -1,3 +1,4 @@
+const nuevoC = require('./nuevocontacto');
 let { input } = require('console-input');
 let keypress = require('keypress');
 const readline = require('readline');
@@ -81,6 +82,30 @@ process.stdin.on('keypress', (str, key) => {
     // if (key.name === '1') {
 
     // }
+  } else if (key.name === '2') {
+    console.clear();
+
+    console.log('Ingrese los datos del nuevo contacto: ');
+    console.log('');
+    nuevoC.nombre = input('nombre: ');
+    console.log(nuevoC.nombre);
+    nuevoC.apellido = input('apellido: ');
+    console.log(nuevoC.apellido);
+    nuevoC.apodo = input('apodo: ');
+    console.log(nuevoC.apodo);
+
+    nuevoC.nacimiento = input('nacimiento: ');
+    console.log(nuevoC.nacimiento);
+    nuevoC.edad = input('edad: ');
+    console.log(nuevoC.edad);
+    nuevoC.telefono = input('telefono: ');
+    console.log(nuevoC.telefono);
+    nuevoC.direccion = input('direccion: ');
+    console.log(nuevoC.direccion);
+    contactos.push(nuevoC);
+    console.log(
+      'Su nuevo contacto ha sido guardado con exito, la bien puta madre que te pario'
+    );
   }
 });
 console.log('opcion: ');
