@@ -1,4 +1,4 @@
-const contactos = [
+let contactos = [
   {
     nombre: 'Alberto',
   },
@@ -61,12 +61,6 @@ const contactos = [
   },
   {
     nombre: 'Justo',
-  },
-  {
-    nombre: 'Juan',
-  },
-  {
-    nombre: 'Marcos',
   },
 ];
 module.exports = contactos;

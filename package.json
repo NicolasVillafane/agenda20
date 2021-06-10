@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "console-input": "^1.0.2"
+    "console-input": "^1.0.2",
+    "keypress": "^0.2.1"
   }
 }
