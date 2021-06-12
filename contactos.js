@@ -57,7 +57,7 @@ let contactos = [
     nombre: 'Facundo',
   },
   {
-    nombre: 'Angel',
+    nombre: 'Jesucristo',
   },
   {
     nombre: 'Justo',
