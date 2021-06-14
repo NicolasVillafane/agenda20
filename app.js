@@ -8,7 +8,6 @@ const contactos = require('./contactos');
 const menuPrin = function (mensaje = '') {
   process.stdout.write('\033c');
 
-  // Log the menu
   console.log('*****************');
   console.log('Bienvenido a la contactera');
   console.log('');
@@ -24,6 +23,7 @@ const menuPrin = function (mensaje = '') {
   console.log('');
   console.log(mensaje);
   console.log('');
+  console.log(contactos.length);
   if (menu) menu.close();
 
   menu = readline.createInterface({
@@ -97,6 +97,8 @@ const verContactos = function (num = 0, num2 = 10) {
   loopContactos(num, num2);
   console.log('*****************');
   console.log('');
+  console.log(`${num2}/${contactos.length}`);
+  console.log('');
   console.log('s - Siguiente');
   console.log('a - Anterior');
   console.log('x - Volver al menu principal');
@@ -111,10 +113,16 @@ const verContactos = function (num = 0, num2 = 10) {
   menu.question('Opcion: ', function (input) {
     switch (input) {
       case 's':
-        verContactos(10, 20);
+        if (num2 >= contactos.length) {
+          return verContactos();
+        }
+        verContactos(num + 10, num2 + 10);
         break;
       case 'a':
-        verContactos(0, 10);
+        if (num === 0 && num2 === 10) {
+          return verContactos();
+        }
+        verContactos(num - 10, num2 - 10);
         break;
       case 'x':
         menuPrin();
@@ -127,13 +135,9 @@ const verContactos = function (num = 0, num2 = 10) {
 
 const loopContactos = function (num, num2) {
   for (let i = num; i < num2; i++) {
-    console.log(`${i + 1} - ${contactos[i].nombre}`);
-  }
-};
-
-const siguientesContactos = function (sum, sum2) {
-  process.stdout.write('\033c');
-  for (let i = sum; i < sum2; i++) {
+    if (i >= contactos.length) {
+      break;
+    }
     console.log(`${i + 1} - ${contactos[i].nombre}`);
   }
 };
