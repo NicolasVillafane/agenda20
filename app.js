@@ -1,4 +1,5 @@
 const nuevoC = require('./nuevocontacto');
+const datos = require('./package.json');
 let { input } = require('console-input');
 let readline = require('readline'),
   menu;
@@ -43,7 +44,7 @@ const menuPrin = function (mensaje = '') {
         console.log('buscar contacto aqui');
         break;
       case '4':
-        console.log('acerca de aqui');
+        acercaDe();
         break;
       case '5':
         process.exit();
@@ -164,6 +165,30 @@ const nuevoContacto = function () {
   console.log(nuevoC.direccion);
   contactos.push(nuevoC);
   menuPrin('>Contacto guardado con exito<');
+};
+
+const acercaDe = function () {
+  process.stdout.write('\033c');
+
+  console.log(`Nombre: ${datos.name}`);
+  console.log(`Version: ${datos.version}`);
+  console.log(`Autor: ${datos.author}`);
+  console.log(`Descripcion: ${datos.description}`);
+  console.log('');
+  console.log('1 - Volver al menu principal');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  menu.question('Opcion: ', function (input) {
+    if (input == 1) {
+      menuPrin();
+    }
+  });
 };
 
 menuPrin();
