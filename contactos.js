@@ -62,5 +62,32 @@ let contactos = [
   {
     nombre: 'Justo',
   },
+  {
+    nombre: 'mendoza',
+  },
+  {
+    nombre: 'roseta',
+  },
+  {
+    nombre: 'jacinto',
+  },
+  {
+    nombre: 'geronimo',
+  },
+  {
+    nombre: 'hector',
+  },
+  {
+    nombre: 'dario',
+  },
+  {
+    nombre: 'denis',
+  },
+  {
+    nombre: 'kevin',
+  },
+  {
+    nombre: 'brian',
+  },
 ];
 module.exports = contactos;
