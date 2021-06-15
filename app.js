@@ -1,10 +1,13 @@
-const nuevoC = require('./nuevocontacto');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/contactos', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const Contacto = require('./nuevocontacto');
 const datos = require('./package.json');
 let readline = require('readline'),
   menu;
-
-const contactos = require('./contactos');
-const { resolve } = require('path');
 
 const menuPrin = function (mensaje = '') {
   process.stdout.write('\033c');
@@ -24,7 +27,6 @@ const menuPrin = function (mensaje = '') {
   console.log('');
   console.log(mensaje);
   console.log('');
-  console.log(contactos.length);
   if (menu) menu.close();
 
   menu = readline.createInterface({
@@ -91,14 +93,42 @@ const menuDirectorio = function () {
   });
 };
 
-const verContactos = function (num = 0, num2 = 10) {
+const verContactos2 = async (num = 0, num2 = 10) => {
   process.stdout.write('\033c');
+  const contactos = await Contacto.find({});
 
   console.log('*****************');
-  loopContactos(num, num2);
+  for (let i = num; i < num2; i++) {
+    console.log(`${i + 1} - ${contactos[i].nombre}`);
+  }
   console.log('*****************');
   console.log('');
-  console.log(`${num2}/${contactos.length}`);
+  console.log('');
+  console.log('s - Siguiente');
+  console.log('a - Anterior');
+  console.log('x - Volver al menu principal');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+};
+
+const verContactos = async function (num = 0, num2 = 10) {
+  process.stdout.write('\033c');
+  const contactos = await Contacto.find({});
+  console.log(contactos.length);
+  console.log('*****************');
+  for (let i = num; i < num2; i++) {
+    if (i >= contactos.length) {
+      break;
+    }
+    console.log(`${i + 1} - ${contactos[i].nombre}`);
+  }
+  console.log('*****************');
+  console.log('');
   console.log('');
   console.log('s - Siguiente');
   console.log('a - Anterior');
@@ -153,12 +183,14 @@ const nuevoContacto = function () {
     output: process.stdout,
   });
 
+  let nombre1, apellido1, apodo1, nacimiento1, edad1, telefono1, direccion1;
+
   console.log('Ingrese los datos del nuevo contacto: ');
 
   const nombre = () => {
     return new Promise((resolve, reject) => {
       menu.question('Nombre: ', (input) => {
-        nuevoC.nombre = input;
+        nombre1 = input;
         resolve();
       });
     });
@@ -166,7 +198,7 @@ const nuevoContacto = function () {
   const apellido = () => {
     return new Promise((resolve, reject) => {
       menu.question('Apellido: ', (input) => {
-        nuevoC.apellido = input;
+        apellido1 = input;
         resolve();
       });
     });
@@ -174,7 +206,7 @@ const nuevoContacto = function () {
   const apodo = () => {
     return new Promise((resolve, reject) => {
       menu.question('Apodo: ', (input) => {
-        nuevoC.apodo = input;
+        apodo1 = input;
         resolve();
       });
     });
@@ -182,7 +214,7 @@ const nuevoContacto = function () {
   const nacimiento = () => {
     return new Promise((resolve, reject) => {
       menu.question('Nacimiento: ', (input) => {
-        nuevoC.nacimiento = input;
+        nacimiento1 = input;
         resolve();
       });
     });
@@ -190,7 +222,7 @@ const nuevoContacto = function () {
   const edad = () => {
     return new Promise((resolve, reject) => {
       menu.question('Edad: ', (input) => {
-        nuevoC.edad = input;
+        edad1 = input;
         resolve();
       });
     });
@@ -198,7 +230,7 @@ const nuevoContacto = function () {
   const telefono = () => {
     return new Promise((resolve, reject) => {
       menu.question('Telefono: ', (input) => {
-        nuevoC.telefono = input;
+        telefono1 = input;
         resolve();
       });
     });
@@ -206,7 +238,7 @@ const nuevoContacto = function () {
   const direccion = () => {
     return new Promise((resolve, reject) => {
       menu.question('Direccion: ', (input) => {
-        nuevoC.direccion = input;
+        direccion1 = input;
         resolve();
       });
     });
@@ -220,7 +252,15 @@ const nuevoContacto = function () {
     await edad();
     await telefono();
     await direccion();
-    await contactos.push(nuevoC);
+    await new Contacto({
+      nombre: nombre1,
+      apellido: apellido1,
+      apodo: apodo1,
+      nacimiento: nacimiento1,
+      edad: edad1,
+      telefono: telefono1,
+      direccion: direccion1,
+    }).save();
     await menuPrin('>Contacto guardado con exito<');
   };
 
@@ -257,3 +297,5 @@ const acercaDe = function () {
 };
 
 menuPrin();
+
+module.exports = Contacto;
