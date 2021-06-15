@@ -21,7 +21,7 @@ const menuPrin = function (mensaje = '') {
   console.log('2 - Nuevo contacto');
   console.log('3 - Buscar contacto');
   console.log('4 - Acerca de');
-  console.log('5 / Ctrl + C - Salir');
+  console.log('5 - Salir');
   console.log('');
   console.log('*****************');
   console.log('');
