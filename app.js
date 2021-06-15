@@ -43,7 +43,7 @@ const menuPrin = function (mensaje = '') {
         nuevoContacto();
         break;
       case '3':
-        console.log('buscar contacto aqui');
+        buscarContacto();
         break;
       case '4':
         acercaDe();
@@ -142,35 +142,65 @@ const verContactos = async function (num = 0, num2 = 10) {
   });
 
   menu.question('Opcion: ', function (input) {
-    switch (input) {
-      case 's':
-        if (num2 >= contactos.length) {
-          return verContactos();
-        }
-        verContactos(num + 10, num2 + 10);
-        break;
-      case 'a':
-        if (num === 0 && num2 === 10) {
-          return verContactos();
-        }
-        verContactos(num - 10, num2 - 10);
-        break;
-      case 'x':
-        menuPrin();
-        break;
-      default:
-        verContactos();
+    if (input == 's') {
+      if (num2 >= contactos.length) {
+        return verContactos();
+      }
+      verContactos(num + 10, num2 + 10);
+    } else if (input == 'a') {
+      if (num === 0 && num2 === 10) {
+        return verContactos();
+      }
+      verContactos(num - 10, num2 - 10);
+    } else if (input == 'x') {
+      menuPrin();
+    } else if (isNaN(input) === false) {
+      mostrarContacto(input);
+    } else {
+      verContactos();
     }
   });
-};
 
-const loopContactos = function (num, num2) {
-  for (let i = num; i < num2; i++) {
-    if (i >= contactos.length) {
-      break;
+  const mostrarContacto = async function (num) {
+    process.stdout.write('\033c');
+    const contactos = await Contacto.find({});
+
+    console.log('*****************');
+    for (i = num - 1; i < num; i++) {
+      console.log(`Nombre: ${contactos[i].nombre}`);
+      console.log(`Apellido: ${contactos[i].apellido}`);
+      console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
+      console.log(`Edad: ${contactos[i].edad}`);
+      console.log(`Telefono: ${contactos[i].telefono}`);
+      console.log(`Direccion: ${contactos[i].direccion}`);
     }
-    console.log(`${i + 1} - ${contactos[i].nombre}`);
-  }
+    console.log('*****************');
+    console.log('');
+    console.log('1 - Volver a todos los contactos');
+    console.log('2 - Volver al menu principal');
+
+    if (menu) menu.close();
+
+    menu = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    menu.question('Opcion: ', function (input) {
+      switch (input) {
+        case '1':
+          verContactos();
+          break;
+        case '2':
+          menuPrin();
+          break;
+        default:
+          mostrarContacto();
+          break;
+      }
+    });
+  };
 };
 
 const nuevoContacto = function () {
@@ -265,6 +295,36 @@ const nuevoContacto = function () {
   };
 
   main();
+};
+
+const buscarContacto = function () {
+  process.stdout.write('\033c');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  menu.question('Ingrese un nombre: ', async function (input) {
+    const contactos = await Contacto.find({ nombre: input });
+    console.log('*****************');
+    for (i = 0; i < contactos.length; i++) {
+      console.log(`${i + 1} - ${contactos[i].nombre} ${contactos[i].apellido}`);
+    }
+    console.log('*****************');
+    console.log('');
+    console.log('x - Volver al menu principal');
+
+    menu.question('Opcion: ', function (input2) {
+      switch (input2) {
+        case 'x':
+          menuPrin();
+          break;
+      }
+    });
+  });
 };
 
 const acercaDe = function () {
