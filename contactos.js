@@ -43,7 +43,7 @@ Contacto.insertMany([
     direccion: 'calle ficticia 123',
   },
   {
-    nombre: 'Maria Laura',
+    nombre: 'Laura',
     apellido: 'Lamberti',
     apodo: 'Lau',
     nacimiento: '1978',
@@ -61,7 +61,7 @@ Contacto.insertMany([
     direccion: 'calle ficticia 123',
   },
   {
-    nombre: 'Mario Alberto',
+    nombre: 'Mario',
     apellido: 'Kempes',
     apodo: 'El Matador',
     nacimiento: '1954',
