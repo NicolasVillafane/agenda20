@@ -300,13 +300,17 @@ const mostrarContactoIndividual = async function (num, nomb) {
   const contactos = await Contacto.find({ nombre: nomb });
   console.log('*****************');
   for (i = num - 1; i < num; i++) {
-    console.log(`Nombre: ${contactos[i].nombre}`);
-    console.log(`Apellido: ${contactos[i].apellido}`);
-    console.log(`Apodo: ${contactos[i].apodo}`);
-    console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
-    console.log(`Edad: ${contactos[i].edad}`);
-    console.log(`Telefono: ${contactos[i].telefono}`);
-    console.log(`Direccion: ${contactos[i].direccion}`);
+    if (contactos[i] != undefined) {
+      console.log(`Nombre: ${contactos[i].nombre}`);
+      console.log(`Apellido: ${contactos[i].apellido}`);
+      console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
+      console.log(`Edad: ${contactos[i].edad}`);
+      console.log(`Telefono: ${contactos[i].telefono}`);
+      console.log(`Direccion: ${contactos[i].direccion}`);
+    } else {
+      console.log('contacto no encontrado');
+    }
   }
   console.log('*****************');
   console.log('');
