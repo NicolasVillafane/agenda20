@@ -5,6 +5,7 @@ let readline = require('readline'),
   menu;
 
 const contactos = require('./contactos');
+const { resolve } = require('path');
 
 const menuPrin = function (mensaje = '') {
   process.stdout.write('\033c');
@@ -18,7 +19,7 @@ const menuPrin = function (mensaje = '') {
   console.log('2 - Nuevo contacto');
   console.log('3 - Buscar contacto');
   console.log('4 - Acerca de');
-  console.log('5 - Salir');
+  console.log('5 / Ctrl + C - Salir');
   console.log('');
   console.log('*****************');
   console.log('');
@@ -146,36 +147,103 @@ const loopContactos = function (num, num2) {
 const nuevoContacto = function () {
   process.stdout.write('\033c');
 
-  console.log('Ingrese los datos del nuevo contacto: ');
-  console.log('');
-  nuevoC.nombre = input('nombre: ');
-  console.log(nuevoC.nombre);
-  nuevoC.apellido = input('apellido: ');
-  console.log(nuevoC.apellido);
-  nuevoC.apodo = input('apodo: ');
-  console.log(nuevoC.apodo);
+  if (menu) menu.close();
 
-  nuevoC.nacimiento = input('nacimiento: ');
-  console.log(nuevoC.nacimiento);
-  nuevoC.edad = input('edad: ');
-  console.log(nuevoC.edad);
-  nuevoC.telefono = input('telefono: ');
-  console.log(nuevoC.telefono);
-  nuevoC.direccion = input('direccion: ');
-  console.log(nuevoC.direccion);
-  contactos.push(nuevoC);
-  menuPrin('>Contacto guardado con exito<');
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  console.log('Ingrese los datos del nuevo contacto: ');
+
+  const nombre = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Nombre: ', (input) => {
+        nuevoC.nombre = input;
+        resolve();
+      });
+    });
+  };
+  const apellido = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Apellido: ', (input) => {
+        nuevoC.apellido = input;
+        resolve();
+      });
+    });
+  };
+  const apodo = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Apodo: ', (input) => {
+        nuevoC.apodo = input;
+        resolve();
+      });
+    });
+  };
+  const nacimiento = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Nacimiento: ', (input) => {
+        nuevoC.nacimiento = input;
+        resolve();
+      });
+    });
+  };
+  const edad = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Edad: ', (input) => {
+        nuevoC.edad = input;
+        resolve();
+      });
+    });
+  };
+  const telefono = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Telefono: ', (input) => {
+        nuevoC.telefono = input;
+        resolve();
+      });
+    });
+  };
+  const direccion = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Direccion: ', (input) => {
+        nuevoC.direccion = input;
+        resolve();
+      });
+    });
+  };
+
+  const main = async () => {
+    await nombre();
+    await apellido();
+    await apodo();
+    await nacimiento();
+    await edad();
+    await telefono();
+    await direccion();
+    await contactos.push(nuevoC);
+    await menuPrin('>Contacto guardado con exito<');
+  };
+
+  main();
 };
 
 const acercaDe = function () {
   process.stdout.write('\033c');
 
+  console.log('*****************');
   console.log(`Nombre: ${datos.name}`);
+  console.log('');
   console.log(`Version: ${datos.version}`);
+  console.log('');
   console.log(`Autor: ${datos.author}`);
+  console.log('');
   console.log(`Descripcion: ${datos.description}`);
   console.log('');
+  console.log('*****************');
+  console.log('');
   console.log('1 - Volver al menu principal');
+  console.log('');
 
   if (menu) menu.close();
 
@@ -185,9 +253,7 @@ const acercaDe = function () {
   });
 
   menu.question('Opcion: ', function (input) {
-    if (input == 1) {
-      menuPrin();
-    }
+    input == 1 ? menuPrin() : acercaDe();
   });
 };
 

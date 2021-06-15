@@ -1,7 +1,7 @@
 {
-  "name": "agenda",
+  "name": "contactera",
   "version": "1.0.0",
-  "description": "",
+  "description": "Agenda de contactos para mantener ordenadas tus amistades, compañeros de trabajo y familia.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
