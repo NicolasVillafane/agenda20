@@ -1,6 +1,5 @@
 const nuevoC = require('./nuevocontacto');
 const datos = require('./package.json');
-let { input } = require('console-input');
 let readline = require('readline'),
   menu;
 
