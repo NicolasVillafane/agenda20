@@ -82,7 +82,7 @@ const menuDirectorio = function () {
         verContactos();
         break;
       case '2':
-        console.log('ver una letra aqui');
+        verLetra();
         break;
       case '3':
         menuPrin();
@@ -93,26 +93,38 @@ const menuDirectorio = function () {
   });
 };
 
-const verContactos2 = async (num = 0, num2 = 10) => {
+const verLetra = function () {
   process.stdout.write('\033c');
-  const contactos = await Contacto.find({});
-
-  console.log('*****************');
-  for (let i = num; i < num2; i++) {
-    console.log(`${i + 1} - ${contactos[i].nombre}`);
-  }
-  console.log('*****************');
-  console.log('');
-  console.log('');
-  console.log('s - Siguiente');
-  console.log('a - Anterior');
-  console.log('x - Volver al menu principal');
 
   if (menu) menu.close();
 
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+  });
+
+  menu.question('Ingrese la primera : ', async function (input) {
+    const inputMayus = input.toUpperCase();
+    const nameRegex = new RegExp(inputMayus);
+    const contactos = await Contacto.find({ nombre: nameRegex });
+    console.log('*****************');
+    for (i = 0; i < contactos.length; i++) {
+      console.log(`${i + 1} - ${contactos[i].nombre} ${contactos[i].apellido}`);
+    }
+    console.log('*****************');
+    console.log('');
+    console.log('x - Volver al menu principal');
+
+    menu.question('Opcion: ', function (input2) {
+      const nombre = contactos[input2 - 1].nombre;
+      if (input2 == 'x') {
+        menuPrin();
+      } else if (isNaN(input2) == false) {
+        mostrarContactoIndividual(input2, nombre);
+      } else {
+        verLetra();
+      }
+    });
   });
 };
 
@@ -202,7 +214,7 @@ const nuevoContacto = function () {
   };
   const nacimiento = () => {
     return new Promise((resolve, reject) => {
-      menu.question('Nacimiento: ', (input) => {
+      menu.question('Año de nacimiento: ', (input) => {
         nacimiento1 = input;
         resolve();
       });
