@@ -120,11 +120,60 @@ const verLetra = function () {
       if (input2 == 'x') {
         menuPrin();
       } else if (isNaN(input2) == false) {
-        mostrarContactoIndividual(input2, nombre);
+        mostrarContactoLetra(input2, input);
       } else {
         verLetra();
       }
     });
+  });
+};
+
+const mostrarContactoLetra = async function (num, letra) {
+  process.stdout.write('\033c');
+  const inputMayus = letra.toUpperCase();
+  const nameRegex = new RegExp(inputMayus);
+  const contactos = await Contacto.find({ nombre: nameRegex });
+
+  console.log('*****************');
+  for (let i = num - 1; i < num; i++) {
+    if (contactos[i] != undefined) {
+      console.log(`Nombre: ${contactos[i].nombre}`);
+      console.log(`Apellido: ${contactos[i].apellido}`);
+      console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
+      console.log(`Edad: ${contactos[i].edad}`);
+      console.log(`Telefono: ${contactos[i].telefono}`);
+      console.log(`Direccion: ${contactos[i].direccion}`);
+    } else {
+      console.log('contacto no encontrado');
+    }
+  }
+  console.log('*****************');
+  console.log('');
+  console.log('1 - Volver a todos los contactos');
+  console.log('2 - Volver al menu principal');
+
+  console.log();
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  menu.question('Opcion: ', function (input) {
+    switch (input) {
+      case '1':
+        verContactos();
+        break;
+      case '2':
+        menuPrin();
+        break;
+      default:
+        mostrarContacto();
+        break;
+    }
   });
 };
 
@@ -311,7 +360,7 @@ const mostrarContactoIndividual = async function (num, nomb) {
   process.stdout.write('\033c');
   const contactos = await Contacto.find({ nombre: nomb });
   console.log('*****************');
-  for (i = num - 1; i < num; i++) {
+  for (let i = num - 1; i < num; i++) {
     if (contactos[i] != undefined) {
       console.log(`Nombre: ${contactos[i].nombre}`);
       console.log(`Apellido: ${contactos[i].apellido}`);
