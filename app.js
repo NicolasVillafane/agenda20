@@ -116,7 +116,6 @@ const verLetra = function () {
     console.log('x - Volver al menu principal');
 
     menu.question('Opcion: ', function (input2) {
-      const nombre = contactos[input2 - 1].nombre;
       if (input2 == 'x') {
         menuPrin();
       } else if (isNaN(input2) == false) {
@@ -320,6 +319,79 @@ const nuevoContacto = function () {
 const buscarContacto = function () {
   process.stdout.write('\033c');
 
+  console.log('*****************');
+  console.log('1 - Buscar contacto por nombre');
+  console.log('2 - Buscar contacto por apellido');
+  console.log('3 - Volver al menu principal');
+  console.log('*****************');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  menu.question('Opcion: ', function (input) {
+    switch (input) {
+      case '1':
+        buscarContactoNombre();
+        break;
+      case '2':
+        buscarContactoApellido();
+        break;
+      case '3':
+        menuPrin();
+        break;
+      default:
+        buscarContacto();
+        break;
+    }
+  });
+};
+
+const buscarContactoApellido = function () {
+  process.stdout.write('\033c');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  menu.question('Ingrese un apellido: ', async function (input) {
+    const contactos = await Contacto.find({ apellido: input });
+    console.log('*****************');
+    for (i = 0; i < contactos.length; i++) {
+      console.log(`${i + 1} - ${contactos[i].nombre} ${contactos[i].apellido}`);
+    }
+    console.log('*****************');
+    console.log('');
+    console.log('x - Volver al menu principal');
+
+    menu.question('Opcion: ', function (input2) {
+      if (input2 == 'x') {
+        menuPrin();
+      } else if (isNaN(input2) == false) {
+        mostrarContactoIndividualApellido(input2, input);
+      } else {
+        buscarContacto();
+      }
+      // switch (input2) {
+      //   case 'x':
+      //     menuPrin();
+      //     break;
+      //   default:
+      //     buscarContacto();
+      //     break;
+      // }
+    });
+  });
+};
+
+const buscarContactoNombre = function () {
+  process.stdout.write('\033c');
+
   if (menu) menu.close();
 
   menu = readline.createInterface({
@@ -356,6 +428,51 @@ const buscarContacto = function () {
     });
   });
 };
+
+const mostrarContactoIndividualApellido = async function (num, ape) {
+  process.stdout.write('\033c');
+  const contactos = await Contacto.find({ apellido: ape });
+  console.log('*****************');
+  for (let i = num - 1; i < num; i++) {
+    if (contactos[i] != undefined) {
+      console.log(`Nombre: ${contactos[i].nombre}`);
+      console.log(`Apellido: ${contactos[i].apellido}`);
+      console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
+      console.log(`Edad: ${contactos[i].edad}`);
+      console.log(`Telefono: ${contactos[i].telefono}`);
+      console.log(`Direccion: ${contactos[i].direccion}`);
+    } else {
+      console.log('contacto no encontrado');
+    }
+  }
+  console.log('*****************');
+  console.log('');
+  console.log('1 - Volver a todos los contactos');
+  console.log('2 - Volver al menu principal');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  menu.question('Opcion: ', function (input) {
+    switch (input) {
+      case '1':
+        verContactos();
+        break;
+      case '2':
+        menuPrin();
+        break;
+      default:
+        mostrarContacto();
+        break;
+    }
+  });
+};
+
 const mostrarContactoIndividual = async function (num, nomb) {
   process.stdout.write('\033c');
   const contactos = await Contacto.find({ nombre: nomb });
