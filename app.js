@@ -243,7 +243,16 @@ const nuevoContacto = function () {
 
   let nombre1, apellido1, apodo1, nacimiento1, edad1, telefono1, direccion1;
 
-  console.log('Ingrese los datos del nuevo contacto: ');
+  console.log(
+    'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+  );
+  console.log('');
+  process.stdin.setRawMode(true);
+  process.stdin.on('keypress', function (chunk, key) {
+    if (key.name == 'escape') {
+      menuPrin();
+    }
+  });
 
   const nombre = () => {
     return new Promise((resolve, reject) => {
