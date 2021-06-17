@@ -53,6 +53,8 @@ const menuPrin = function (mensaje = '') {
         acercaDe();
         break;
       case '5':
+        process.stdout.write('\033c');
+        console.log('chau');
         process.exit();
         break;
       default:
@@ -246,6 +248,7 @@ const nuevoContacto = function () {
   });
 
   let nombre1, apellido1, apodo1, nacimiento1, edad1, telefono1, direccion1;
+  const año = 2021;
 
   console.log(
     'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
@@ -261,56 +264,120 @@ const nuevoContacto = function () {
   const nombre = () => {
     return new Promise((resolve, reject) => {
       menu.question('Nombre: ', (input) => {
-        nombre1 = input;
-        resolve();
+        let res = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(input);
+        if (
+          input.length <= 15 &&
+          input &&
+          isNaN(input) == true &&
+          res == true
+        ) {
+          nombre1 = input;
+          resolve();
+        } else if (input.length > 15 || !input) {
+          menuPrin(
+            '>El nombre del nuevo contacto debe tener entre 1 y 15 caracteres<'
+          );
+        } else if (isNaN(input) == false || res == false) {
+          menuPrin('>El nombre del nuevo contacto no puede incluir numeros<');
+        }
       });
     });
   };
   const apellido = () => {
     return new Promise((resolve, reject) => {
       menu.question('Apellido: ', (input) => {
-        apellido1 = input;
-        resolve();
+        let res = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(input);
+        if (
+          input.length <= 15 &&
+          input &&
+          isNaN(input) == true &&
+          res == true
+        ) {
+          apellido1 = input;
+          resolve();
+        } else if (input.length > 15 || !input) {
+          menuPrin(
+            '>El apellido del nuevo contacto debe tener entre 1 y 15 caracteres<'
+          );
+        } else if (isNaN(input) == false || res == false) {
+          menuPrin('>El apellido del nuevo contacto no puede incluir numeros<');
+        }
       });
     });
   };
   const apodo = () => {
     return new Promise((resolve, reject) => {
       menu.question('Apodo: ', (input) => {
-        apodo1 = input;
-        resolve();
+        let res = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(input);
+        if (
+          input.length <= 15 &&
+          input &&
+          isNaN(input) == true &&
+          res == true
+        ) {
+          apodo1 = input;
+          resolve();
+        } else if (input.length > 15 || !input) {
+          menuPrin(
+            '>El apodo del nuevo contacto debe tener entre 1 y 15 caracteres<'
+          );
+        } else if (isNaN(input) == false || res == false) {
+          menuPrin('>El apodo del nuevo contacto no puede incluir numeros<');
+        }
       });
     });
   };
   const nacimiento = () => {
     return new Promise((resolve, reject) => {
       menu.question('Año de nacimiento: ', (input) => {
-        nacimiento1 = input;
-        resolve();
+        if (isNaN(input) == false && input < año && input) {
+          nacimiento1 = input;
+          resolve();
+        } else {
+          menuPrin('>Año no valido<');
+        }
       });
     });
   };
   const edad = () => {
     return new Promise((resolve, reject) => {
+      const edadPosible = año - nacimiento1;
       menu.question('Edad: ', (input) => {
-        edad1 = input;
-        resolve();
+        if (
+          isNaN(input) == false &&
+          input &&
+          input <= edadPosible &&
+          input > edadPosible - 2
+        ) {
+          edad1 = input;
+          resolve();
+        } else {
+          menuPrin('>Edad no valida<');
+        }
       });
     });
   };
   const telefono = () => {
     return new Promise((resolve, reject) => {
       menu.question('Telefono: ', (input) => {
-        telefono1 = input;
-        resolve();
+        if (isNaN(input) == false && input && input.length == 8) {
+          telefono1 = input;
+          resolve();
+        } else {
+          menuPrin('>Numero de telefono no valido<');
+        }
       });
     });
   };
   const direccion = () => {
     return new Promise((resolve, reject) => {
       menu.question('Direccion: ', (input) => {
-        direccion1 = input;
-        resolve();
+        if (isNaN(input) == true && input && input.length <= 30) {
+          direccion1 = input;
+          resolve();
+        } else {
+          menuPrin('>Direccion no valida<');
+        }
       });
     });
   };
@@ -620,71 +687,143 @@ const mostrarContacto = async function (num, nomb) {
 const editarContacto = async function (id) {
   process.stdout.write('\033c');
   const contacto = await Contacto.find({ _id: ObjectId(id) });
-  console.log(contacto);
   if (menu) menu.close();
 
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-
-  console.log('Ingrese nuevamente los datos del contacto: ');
-
   let nombre1, apellido1, apodo1, nacimiento1, edad1, telefono1, direccion1;
+  const año = 2021;
+  console.log(
+    'Ingrese nuevamente los datos del contacto o presione esc para volver al menu: '
+  );
+
+  console.log('');
+  process.stdin.setRawMode(true);
+  process.stdin.on('keypress', function (chunk, key) {
+    if (key.name == 'escape') {
+      menuPrin();
+    }
+  });
 
   const nombre = () => {
     return new Promise((resolve, reject) => {
       menu.question('Nombre: ', (input) => {
-        nombre1 = input;
-        resolve();
+        let res = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(input);
+        if (
+          input.length <= 15 &&
+          input &&
+          isNaN(input) == true &&
+          res == true
+        ) {
+          nombre1 = input;
+          resolve();
+        } else if (input.length > 15 || !input) {
+          menuPrin(
+            '>El nombre del contacto debe tener entre 1 y 15 caracteres<'
+          );
+        } else if (isNaN(input) == false || res == false) {
+          menuPrin('>El nombre del contacto no puede incluir numeros<');
+        }
       });
     });
   };
   const apellido = () => {
     return new Promise((resolve, reject) => {
       menu.question('Apellido: ', (input) => {
-        apellido1 = input;
-        resolve();
+        let res = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(input);
+        if (
+          input.length <= 15 &&
+          input &&
+          isNaN(input) == true &&
+          res == true
+        ) {
+          apellido1 = input;
+          resolve();
+        } else if (input.length > 15 || !input) {
+          menuPrin(
+            '>El apellido del contacto debe tener entre 1 y 15 caracteres<'
+          );
+        } else if (isNaN(input) == false || res == false) {
+          menuPrin('>El apellido del contacto no puede incluir numeros<');
+        }
       });
     });
   };
   const apodo = () => {
     return new Promise((resolve, reject) => {
       menu.question('Apodo: ', (input) => {
-        apodo1 = input;
-        resolve();
+        let res = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(input);
+        if (
+          input.length <= 15 &&
+          input &&
+          isNaN(input) == true &&
+          res == true
+        ) {
+          apodo1 = input;
+          resolve();
+        } else if (input.length > 15 || !input) {
+          menuPrin(
+            '>El apodo del contacto debe tener entre 1 y 15 caracteres<'
+          );
+        } else if (isNaN(input) == false || res == false) {
+          menuPrin('>El apodo del contacto no puede incluir numeros<');
+        }
       });
     });
   };
   const nacimiento = () => {
     return new Promise((resolve, reject) => {
       menu.question('Año de nacimiento: ', (input) => {
-        nacimiento1 = input;
-        resolve();
+        if (isNaN(input) == false && input < año && input) {
+          nacimiento1 = input;
+          resolve();
+        } else {
+          menuPrin('>Año no valido<');
+        }
       });
     });
   };
   const edad = () => {
     return new Promise((resolve, reject) => {
+      const edadPosible = año - nacimiento1;
       menu.question('Edad: ', (input) => {
-        edad1 = input;
-        resolve();
+        if (
+          isNaN(input) == false &&
+          input &&
+          input <= edadPosible &&
+          input > edadPosible - 2
+        ) {
+          edad1 = input;
+          resolve();
+        } else {
+          menuPrin('>Edad no valida<');
+        }
       });
     });
   };
   const telefono = () => {
     return new Promise((resolve, reject) => {
       menu.question('Telefono: ', (input) => {
-        telefono1 = input;
-        resolve();
+        if (isNaN(input) == false && input && input.length == 8) {
+          telefono1 = input;
+          resolve();
+        } else {
+          menuPrin('>Numero de telefono no valido<');
+        }
       });
     });
   };
   const direccion = () => {
     return new Promise((resolve, reject) => {
       menu.question('Direccion: ', (input) => {
-        direccion1 = input;
-        resolve();
+        if (isNaN(input) == true && input && input.length <= 30) {
+          direccion1 = input;
+          resolve();
+        } else {
+          menuPrin('>Direccion no valida<');
+        }
       });
     });
   };
