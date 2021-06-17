@@ -192,7 +192,6 @@ const verContactos = async function (num = 0, num2 = 10) {
   process.stdout.write('\033c');
   let i;
   const contactos = await Contacto.find({});
-  console.log(contactos.length);
   console.log('*****************');
   for (i = num; i < num2; i++) {
     if (i >= contactos.length) {
