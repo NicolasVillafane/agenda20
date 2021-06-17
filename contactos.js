@@ -1,5 +1,8 @@
+require('dotenv').config();
+const dbUrl = process.env.DB_URL;
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/contactos', {
+// 'mongodb://localhost/contactos'
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
