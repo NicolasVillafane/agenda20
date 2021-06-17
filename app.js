@@ -3,6 +3,7 @@ mongoose.connect('mongodb://localhost/contactos', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+const ObjectId = require('mongodb').ObjectId;
 
 const Contacto = require('./nuevocontacto');
 const datos = require('./package.json');
@@ -149,8 +150,10 @@ const mostrarContactoLetra = async function (num, letra) {
   }
   console.log('*****************');
   console.log('');
-  console.log('1 - Volver a todos los contactos');
-  console.log('2 - Volver al menu principal');
+  console.log('1 - Editar Contacto');
+  console.log('2 - Eliminar Contacto');
+  console.log('3 - Volver a todos los contactos');
+  console.log('4 - Volver al menu principal');
 
   console.log();
 
@@ -164,9 +167,15 @@ const mostrarContactoLetra = async function (num, letra) {
   menu.question('Opcion: ', function (input) {
     switch (input) {
       case '1':
-        verContactos();
+        editarContacto(contactos[i - 1]._id);
         break;
       case '2':
+        eliminarContacto(contactos[i - 1]._id);
+        break;
+      case '3':
+        verContactos();
+        break;
+      case '4':
         menuPrin();
         break;
       default:
@@ -448,8 +457,10 @@ const mostrarContactoIndividualApellido = async function (num, ape) {
   }
   console.log('*****************');
   console.log('');
-  console.log('1 - Volver a todos los contactos');
-  console.log('2 - Volver al menu principal');
+  console.log('1 - Editar contacto');
+  console.log('2 - Eliminar contacto');
+  console.log('3 - Volver a todos los contactos');
+  console.log('4 - Volver al menu principal');
 
   if (menu) menu.close();
 
@@ -461,9 +472,15 @@ const mostrarContactoIndividualApellido = async function (num, ape) {
   menu.question('Opcion: ', function (input) {
     switch (input) {
       case '1':
-        verContactos();
+        editarContacto(contactos[i - 1]._id);
         break;
       case '2':
+        eliminarContacto(contactos[i - 1]._id);
+        break;
+      case '3':
+        verContactos();
+        break;
+      case '4':
         menuPrin();
         break;
       default:
@@ -492,8 +509,10 @@ const mostrarContactoIndividual = async function (num, nomb) {
   }
   console.log('*****************');
   console.log('');
-  console.log('1 - Volver a todos los contactos');
-  console.log('2 - Volver al menu principal');
+  console.log('1 - Editar contacto');
+  console.log('2 - Eliminar contacto');
+  console.log('3 - Volver a todos los contactos');
+  console.log('4 - Volver al menu principal');
 
   if (menu) menu.close();
 
@@ -505,9 +524,15 @@ const mostrarContactoIndividual = async function (num, nomb) {
   menu.question('Opcion: ', function (input) {
     switch (input) {
       case '1':
-        verContactos();
+        editarContacto(contactos[i - 1]._id);
         break;
       case '2':
+        eliminarContacto(contactos[i - 1]._id);
+        break;
+      case '3':
+        verContactos();
+        break;
+      case '4':
         menuPrin();
         break;
       default:
@@ -536,8 +561,10 @@ const mostrarContacto = async function (num, nomb) {
   }
   console.log('*****************');
   console.log('');
-  console.log('1 - Volver a todos los contactos');
-  console.log('2 - Volver al menu principal');
+  console.log('1 - Editar contacto');
+  console.log('2 - Eliminar contacto');
+  console.log('3 - Volver a todos los contactos');
+  console.log('4 - Volver al menu principal');
 
   if (menu) menu.close();
 
@@ -549,9 +576,15 @@ const mostrarContacto = async function (num, nomb) {
   menu.question('Opcion: ', function (input) {
     switch (input) {
       case '1':
-        verContactos();
+        editarContacto(contactos[i - 1]._id);
         break;
       case '2':
+        eliminarContacto(contactos[i - 1]._id);
+        break;
+      case '3':
+        verContactos();
+        break;
+      case '4':
         menuPrin();
         break;
       default:
@@ -559,6 +592,131 @@ const mostrarContacto = async function (num, nomb) {
         break;
     }
   });
+};
+
+const editarContacto = async function (id) {
+  process.stdout.write('\033c');
+  const contacto = await Contacto.find({ _id: ObjectId(id) });
+  console.log(contacto);
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  console.log('Ingrese nuevamente los datos del contacto: ');
+
+  let nombre1, apellido1, apodo1, nacimiento1, edad1, telefono1, direccion1;
+
+  const nombre = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Nombre: ', (input) => {
+        nombre1 = input;
+        resolve();
+      });
+    });
+  };
+  const apellido = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Apellido: ', (input) => {
+        apellido1 = input;
+        resolve();
+      });
+    });
+  };
+  const apodo = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Apodo: ', (input) => {
+        apodo1 = input;
+        resolve();
+      });
+    });
+  };
+  const nacimiento = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Año de nacimiento: ', (input) => {
+        nacimiento1 = input;
+        resolve();
+      });
+    });
+  };
+  const edad = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Edad: ', (input) => {
+        edad1 = input;
+        resolve();
+      });
+    });
+  };
+  const telefono = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Telefono: ', (input) => {
+        telefono1 = input;
+        resolve();
+      });
+    });
+  };
+  const direccion = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Direccion: ', (input) => {
+        direccion1 = input;
+        resolve();
+      });
+    });
+  };
+
+  const main = async () => {
+    await nombre();
+    await apellido();
+    await apodo();
+    await nacimiento();
+    await edad();
+    await telefono();
+    await direccion();
+    await Contacto.replaceOne(
+      { _id: ObjectId(id) },
+      {
+        nombre: nombre1,
+        apellido: apellido1,
+        apodo: apodo1,
+        nacimiento: nacimiento1,
+        edad: edad1,
+        telefono: telefono1,
+        direccion: direccion1,
+      }
+    );
+    await menuPrin('>Contacto editado con exito<');
+  };
+
+  main();
+};
+
+const eliminarContacto = function (id) {
+  process.stdout.write('\033c');
+
+  if (menu) menu.close();
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  menu.question(
+    'Esta seguro de eliminar el contacto? y/n: ',
+    async function (input) {
+      if (input == 'y') {
+        const contacto = await Contacto.find({ _id: ObjectId(id) });
+        await menuPrin(
+          `>Contacto "${contacto[0].nombre} ${contacto[0].apellido}" eliminado con exito<`
+        );
+        await Contacto.deleteOne(contacto[0]);
+      } else if (input == 'n') {
+        verContactos();
+      } else {
+        verContactos();
+      }
+    }
+  );
 };
 
 const acercaDe = function () {
