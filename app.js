@@ -119,7 +119,7 @@ const verLetra = function () {
     menu.question('Opcion: ', function (input2) {
       if (input2 == 'x') {
         menuPrin();
-      } else if (isNaN(input2) == false) {
+      } else if (isNaN(input2) == false && input2) {
         mostrarContactoLetra(input2, input);
       } else {
         verLetra();
@@ -145,7 +145,7 @@ const mostrarContactoLetra = async function (num, letra) {
       console.log(`Telefono: ${contactos[i].telefono}`);
       console.log(`Direccion: ${contactos[i].direccion}`);
     } else {
-      console.log('contacto no encontrado');
+      return verContactos();
     }
   }
   console.log('*****************');
@@ -223,7 +223,7 @@ const verContactos = async function (num = 0, num2 = 10) {
       verContactos(num - 10, num2 - 10);
     } else if (input == 'x') {
       menuPrin();
-    } else if (isNaN(input) === false) {
+    } else if (isNaN(input) === false && input) {
       mostrarContacto(input);
     } else {
       verContactos();
@@ -381,7 +381,7 @@ const buscarContactoApellido = function () {
     menu.question('Opcion: ', function (input2) {
       if (input2 == 'x') {
         menuPrin();
-      } else if (isNaN(input2) == false) {
+      } else if (isNaN(input2) == false && input2) {
         mostrarContactoIndividualApellido(input2, input);
       } else {
         buscarContacto();
@@ -421,7 +421,7 @@ const buscarContactoNombre = function () {
     menu.question('Opcion: ', function (input2) {
       if (input2 == 'x') {
         menuPrin();
-      } else if (isNaN(input2) == false) {
+      } else if (isNaN(input2) == false && input2) {
         mostrarContactoIndividual(input2, input);
       } else {
         buscarContacto();
@@ -452,7 +452,7 @@ const mostrarContactoIndividualApellido = async function (num, ape) {
       console.log(`Telefono: ${contactos[i].telefono}`);
       console.log(`Direccion: ${contactos[i].direccion}`);
     } else {
-      console.log('contacto no encontrado');
+      return verContactos();
     }
   }
   console.log('*****************');
@@ -504,7 +504,7 @@ const mostrarContactoIndividual = async function (num, nomb) {
       console.log(`Telefono: ${contactos[i].telefono}`);
       console.log(`Direccion: ${contactos[i].direccion}`);
     } else {
-      console.log('contacto no encontrado');
+      return verContactos();
     }
   }
   console.log('*****************');
@@ -556,7 +556,7 @@ const mostrarContacto = async function (num, nomb) {
       console.log(`Telefono: ${contactos[i].telefono}`);
       console.log(`Direccion: ${contactos[i].direccion}`);
     } else {
-      console.log('contacto no encontrado');
+      return verContactos();
     }
   }
   console.log('*****************');
