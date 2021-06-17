@@ -190,10 +190,11 @@ const mostrarContactoLetra = async function (num, letra) {
 
 const verContactos = async function (num = 0, num2 = 10) {
   process.stdout.write('\033c');
+  let i;
   const contactos = await Contacto.find({});
   console.log(contactos.length);
   console.log('*****************');
-  for (let i = num; i < num2; i++) {
+  for (i = num; i < num2; i++) {
     if (i >= contactos.length) {
       break;
     }
@@ -201,6 +202,7 @@ const verContactos = async function (num = 0, num2 = 10) {
   }
   console.log('*****************');
   console.log('');
+  console.log(`${i}/${contactos.length}`);
   console.log('');
   console.log('s - Siguiente');
   console.log('a - Anterior');
