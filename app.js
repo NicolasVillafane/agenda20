@@ -382,7 +382,8 @@ const buscarContactoApellido = function () {
     output: process.stdout,
   });
   menu.question('Ingrese un apellido: ', async function (input) {
-    const contactos = await Contacto.find({ apellido: input });
+    const nameRegex = new RegExp(input);
+    const contactos = await Contacto.find({ apellido: nameRegex });
     console.log('*****************');
     for (i = 0; i < contactos.length; i++) {
       console.log(`${i + 1} - ${contactos[i].nombre} ${contactos[i].apellido}`);
@@ -395,7 +396,10 @@ const buscarContactoApellido = function () {
       if (input2 == 'x') {
         menuPrin();
       } else if (isNaN(input2) == false && input2) {
-        mostrarContactoIndividualApellido(input2, input);
+        const apell = contactos[input2 - 1].apellido;
+        console.log(input2);
+        console.log(apell);
+        mostrarContactoIndividualApellido(input2, apell);
       } else {
         buscarContacto();
       }
@@ -422,20 +426,26 @@ const buscarContactoNombre = function () {
   });
 
   menu.question('Ingrese un nombre: ', async function (input) {
-    const contactos = await Contacto.find({ nombre: input });
+    const nameRegex = new RegExp(input);
+    const contactos = await Contacto.find({ nombre: nameRegex });
+
     console.log('*****************');
     for (i = 0; i < contactos.length; i++) {
       console.log(`${i + 1} - ${contactos[i].nombre} ${contactos[i].apellido}`);
     }
     console.log('*****************');
     console.log('');
+    console.log(i);
     console.log('x - Volver al menu principal');
 
     menu.question('Opcion: ', function (input2) {
       if (input2 == 'x') {
         menuPrin();
       } else if (isNaN(input2) == false && input2) {
-        mostrarContactoIndividual(input2, input);
+        const nombr = contactos[input2 - 1].nombre;
+        console.log(input2);
+        console.log(nombr);
+        mostrarContactoIndividual(input2, nombr);
       } else {
         buscarContacto();
       }
