@@ -13,6 +13,8 @@ const datos = require('./package.json');
 let readline = require('readline'),
   menu;
 
+let nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1;
+
 const menuPrin = function (mensaje = '') {
   process.stdout.write('\033c');
 
@@ -247,8 +249,12 @@ const nuevoContacto = function () {
     output: process.stdout,
   });
 
-  let nombre1, apellido1, apodo1, nacimiento1, edad1, telefono1, direccion1;
-  const año = 2021;
+  let fechaHoy = new Date();
+  let dd = String(fechaHoy.getDate()).padStart(2, '0');
+  let mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+  let yyyy = fechaHoy.getFullYear();
+
+  fechaHoy = `${dd}/${mm}/${yyyy}`;
 
   console.log(
     'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
@@ -260,6 +266,10 @@ const nuevoContacto = function () {
       menuPrin();
     }
   });
+
+  // if (isNaN(input) == false || res == false || input.length > 15 || !input) {
+  //   nombre();
+  // }
 
   const nombre = () => {
     return new Promise((resolve, reject) => {
@@ -273,12 +283,13 @@ const nuevoContacto = function () {
         ) {
           nombre1 = input;
           resolve();
-        } else if (input.length > 15 || !input) {
-          menuPrin(
-            '>El nombre del nuevo contacto debe tener entre 1 y 15 caracteres<'
+        } else {
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
           );
-        } else if (isNaN(input) == false || res == false) {
-          menuPrin('>El nombre del nuevo contacto no puede incluir numeros<');
+          console.log('');
+          main();
         }
       });
     });
@@ -295,12 +306,14 @@ const nuevoContacto = function () {
         ) {
           apellido1 = input;
           resolve();
-        } else if (input.length > 15 || !input) {
-          menuPrin(
-            '>El apellido del nuevo contacto debe tener entre 1 y 15 caracteres<'
+        } else {
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
           );
-        } else if (isNaN(input) == false || res == false) {
-          menuPrin('>El apellido del nuevo contacto no puede incluir numeros<');
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          main('2');
         }
       });
     });
@@ -317,54 +330,102 @@ const nuevoContacto = function () {
         ) {
           apodo1 = input;
           resolve();
-        } else if (input.length > 15 || !input) {
-          menuPrin(
-            '>El apodo del nuevo contacto debe tener entre 1 y 15 caracteres<'
+        } else {
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
           );
-        } else if (isNaN(input) == false || res == false) {
-          menuPrin('>El apodo del nuevo contacto no puede incluir numeros<');
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          main('3');
         }
       });
     });
   };
-  const nacimiento = () => {
+  const diaNacimiento = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Dia de nacimiento: ', (input) => {
+        if (isNaN(input) == false && input <= 31 && input) {
+          diaN = input;
+          resolve();
+        } else {
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+          );
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          console.log(`Apodo: ${apodo1}`);
+          main('4');
+        }
+      });
+    });
+  };
+  const mesNacimiento = () => {
+    return new Promise((resolve, reject) => {
+      menu.question('Mes de nacimiento: ', (input) => {
+        if (isNaN(input) == false && input <= 12 && input) {
+          mesN = input;
+          resolve();
+        } else {
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+          );
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          console.log(`Apodo: ${apodo1}`);
+          console.log(`Dia de nacimiento: ${diaN}`);
+          main('5');
+        }
+      });
+    });
+  };
+  const añoNacimiento = () => {
     return new Promise((resolve, reject) => {
       menu.question('Año de nacimiento: ', (input) => {
-        if (isNaN(input) == false && input < año && input) {
-          nacimiento1 = input;
+        if (isNaN(input) == false && input < yyyy && input) {
+          añoN = input;
           resolve();
         } else {
-          menuPrin('>Año no valido<');
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+          );
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          console.log(`Apodo: ${apodo1}`);
+          console.log(`Dia de nacimiento: ${diaN}`);
+          console.log(`Mes de nacimiento: ${mesN}`);
+          main('6');
         }
       });
     });
   };
-  const edad = () => {
-    return new Promise((resolve, reject) => {
-      const edadPosible = año - nacimiento1;
-      menu.question('Edad: ', (input) => {
-        if (
-          isNaN(input) == false &&
-          input &&
-          input <= edadPosible &&
-          input > edadPosible - 2
-        ) {
-          edad1 = input;
-          resolve();
-        } else {
-          menuPrin('>Edad no valida<');
-        }
-      });
-    });
-  };
+
   const telefono = () => {
     return new Promise((resolve, reject) => {
-      menu.question('Telefono: ', (input) => {
+      menu.question('Telefono (8 digitos): ', (input) => {
         if (isNaN(input) == false && input && input.length == 8) {
           telefono1 = input;
           resolve();
         } else {
-          menuPrin('>Numero de telefono no valido<');
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+          );
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          console.log(`Apodo: ${apodo1}`);
+          console.log(`Dia de nacimiento: ${diaN}`);
+          console.log(`Mes de nacimiento: ${mesN}`);
+          console.log(`Año de nacimiento: ${añoN}`);
+          main('7');
         }
       });
     });
@@ -376,26 +437,96 @@ const nuevoContacto = function () {
           direccion1 = input;
           resolve();
         } else {
-          menuPrin('>Direccion no valida<');
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+          );
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          console.log(`Apodo: ${apodo1}`);
+          console.log(`Dia de nacimiento: ${diaN}`);
+          console.log(`Mes de nacimiento: ${mesN}`);
+          console.log(`Año de nacimiento: ${añoN}`);
+          console.log(`Telefono (8 digitos): ${telefono1}`);
+          main('8');
         }
       });
     });
   };
+  let edadActual;
+  const calcularEdad = function () {
+    edadActual = yyyy - añoN;
+    if (mm <= mesN || dd < diaN) {
+      edadActual - 1;
+    }
+    edadActual;
+  };
 
-  const main = async () => {
-    await nombre();
-    await apellido();
-    await apodo();
-    await nacimiento();
-    await edad();
-    await telefono();
-    await direccion();
+  const main = async (input) => {
+    switch (input) {
+      case '1':
+        await nombre();
+        break;
+      case '2':
+        await apellido();
+        break;
+      case '3':
+        await apodo();
+        break;
+      case '4':
+        await diaNacimiento();
+        break;
+      case '5':
+        await mesNacimiento();
+        break;
+      case '6':
+        await añoNacimiento();
+        break;
+      case '7':
+        await telefono();
+        break;
+      case '8':
+        direccion();
+        break;
+      default:
+        main('1');
+        break;
+    }
+
+    if (!nombre1) {
+      await nombre();
+    }
+    if (!apellido1) {
+      await apellido();
+    }
+    if (!apodo1) {
+      await apodo();
+    }
+    if (!diaN) {
+      await diaNacimiento();
+    }
+    if (!mesN) {
+      await mesNacimiento();
+    }
+    if (!añoN) {
+      await añoNacimiento();
+    }
+    if (!telefono1) {
+      await telefono();
+    }
+    if (!direccion1) {
+      await direccion();
+    }
+
+    await calcularEdad();
+
     await new Contacto({
       nombre: nombre1,
       apellido: apellido1,
       apodo: apodo1,
-      nacimiento: nacimiento1,
-      edad: edad1,
+      nacimiento: `${diaN}/${mesN}/${añoN}`,
+      edad: edadActual,
       telefono: telefono1,
       direccion: direccion1,
     }).save();

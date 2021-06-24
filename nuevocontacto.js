@@ -4,7 +4,7 @@ const nuevoC = new mongoose.Schema({
   nombre: String,
   apellido: String,
   apodo: String,
-  nacimiento: Number,
+  nacimiento: String,
   edad: Number,
   telefono: Number,
   direccion: String,
