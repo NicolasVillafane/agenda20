@@ -17,6 +17,8 @@ let readline = require('readline'),
 
 let nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1;
 
+let nombresFreno = [];
+
 const handleError = function (error) {
   console.log(`ERROR FATAL CUIDADO EVACUE DE INMEDIATO LA ZONA: ${error}`);
 };
@@ -120,24 +122,17 @@ const verLetra = function () {
   menu.question('Ingrese la primera : ', async function (input) {
     const inputMayus = input.toUpperCase();
     const nameRegex = new RegExp(inputMayus);
-    const contactos = await Contacto.find({ nombre: nameRegex });
-    console.log('*****************');
-    for (i = 0; i < contactos.length; i++) {
-      console.log(`${i + 1} - ${contactos[i].nombre} ${contactos[i].apellido}`);
-    }
-    console.log('*****************');
-    console.log('');
-    console.log('x - Volver al menu principal');
-
-    menu.question('Opcion: ', function (input2) {
-      if (input2 == 'x') {
-        menuPrin();
-      } else if (isNaN(input2) == false && input2) {
-        mostrarContactoLetra(input2, input);
-      } else {
-        verLetra();
+    const contactos = await Contacto.find({}).sort({ nombre: 1 });
+    for (let i = 0; i < contactos.length; i++) {
+      if (contactos[i].nombre.indexOf(inputMayus) == 0) {
+        nombresFreno.push(contactos[i].nombre);
       }
-    });
+    }
+
+    // verContactos(,contactos.length);
+    console.log(nombresFreno);
+    verContactos();
+    console.log('fin');
   });
 };
 
@@ -203,13 +198,34 @@ const verContactos = async function (num = 0, num2 = 10) {
   let i;
   const contactos = await Contacto.find({}).sort({ nombre: 1 });
 
+  console.clear();
+
   console.log('*****************');
-  for (i = num; i < num2; i++) {
-    if (i >= contactos.length) {
-      break;
+
+  if (nombresFreno[0] == undefined) {
+    for (i = num; i < num2; i++) {
+      if (i >= contactos.length) {
+        break;
+      }
+      console.log(`${i + 1} - ${contactos[i].nombre}`);
     }
-    console.log(`${i + 1} - ${contactos[i].nombre}`);
+  } else {
+    let arr = [];
+    for (i = num; i < num2; i++) {
+      if (i >= contactos.length) {
+        break;
+      }
+      arr.push(contactos[i].nombre);
+      console.log(`${i + 1} - ${contactos[i].nombre}`);
+    }
+    if (arr.includes(nombresFreno[0]) == true) {
+      nombresFreno = [];
+    } else {
+      console.clear();
+      verContactos(num + 10, num2 + 10);
+    }
   }
+
   console.log('*****************');
   console.log('');
   console.log(`${i}/${contactos.length}`);
@@ -230,15 +246,19 @@ const verContactos = async function (num = 0, num2 = 10) {
       if (num2 >= contactos.length) {
         return verContactos();
       }
+      nombresFreno = [];
       verContactos(num + 10, num2 + 10);
     } else if (input == 'a') {
       if (num === 0 && num2 === 10) {
         return verContactos();
       }
+      nombresFreno = [];
       verContactos(num - 10, num2 - 10);
     } else if (input == 'x') {
+      nombresFreno = [];
       menuPrin();
     } else if (isNaN(input) === false && input) {
+      nombresFreno = [];
       mostrarContacto(input);
     } else {
       verContactos();
