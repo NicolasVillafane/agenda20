@@ -2,10 +2,12 @@ require('dotenv').config();
 const dbUrl = process.env.DB_URL;
 const mongoose = require('mongoose');
 // 'mongodb://localhost/contactos'
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose
+  .connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .catch((error) => handleError(error));
 const ObjectId = require('mongodb').ObjectId;
 
 const Contacto = require('./nuevocontacto');
@@ -14,6 +16,10 @@ let readline = require('readline'),
   menu;
 
 let nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1;
+
+const handleError = function (error) {
+  console.log(`ERROR FATAL CUIDADO EVACUE DE INMEDIATO LA ZONA: ${error}`);
+};
 
 const menuPrin = function (mensaje = '') {
   process.stdout.write('\033c');
@@ -195,7 +201,8 @@ const mostrarContactoLetra = async function (num, letra) {
 const verContactos = async function (num = 0, num2 = 10) {
   process.stdout.write('\033c');
   let i;
-  const contactos = await Contacto.find({});
+  const contactos = await Contacto.find({}).sort({ nombre: 1 });
+
   console.log('*****************');
   for (i = num; i < num2; i++) {
     if (i >= contactos.length) {
@@ -765,7 +772,7 @@ const mostrarContactoIndividual = async function (num, nomb) {
 
 const mostrarContacto = async function (num, nomb) {
   process.stdout.write('\033c');
-  const contactos = await Contacto.find({});
+  const contactos = await Contacto.find({}).sort({ nombre: 1 });
   console.log('*****************');
   for (i = num - 1; i < num; i++) {
     if (contactos[i] != undefined) {
