@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,7 +59,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verContactos = exports.menuDirectorio = void 0;
-var dbUrl = 'mongodb+srv://nivi1023:RC7LzwJeemUjcGM1@cluster0.t7iki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+var dotenv = __importStar(require("dotenv"));
+dotenv.config({ path: __dirname + '/.env' });
+var dbUrl = process.env.DB_URL;
 var mongoose_1 = __importDefault(require("mongoose"));
 // 'mongodb://localhost/contactos'
 mongoose_1.default
@@ -54,6 +75,30 @@ var MenuPrincipal_1 = require("./MenuPrincipal");
 var NuevoContactoMongo_1 = require("./NuevoContactoMongo");
 var EditarContacto_1 = require("./EditarContacto");
 var EliminarContacto_1 = require("./EliminarContacto");
+var nodemailer_1 = __importDefault(require("nodemailer"));
+var mail = nodemailer_1.default.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'nivi1023@gmail.com',
+        pass: process.env.MAIL_PASS,
+    },
+});
+// tslint:disable-next-line: no-var-requires
+var xl = require('excel4node');
+// Create a new instance of a Workbook class
+var wb = new xl.Workbook();
+// Add Worksheets to the workbook
+var ws = wb.addWorksheet('Sheet 1');
+var ws2 = wb.addWorksheet('Sheet 2');
+// Create a reusable style
+var style = wb.createStyle({
+    font: {
+        color: '#040404',
+        size: 12,
+    },
+});
 var nombresFreno = [];
 var menu;
 var menuDirectorio = function () {
@@ -64,6 +109,7 @@ var menuDirectorio = function () {
     console.log('1 - Ver todos los contactos');
     console.log('2 - Ver una letra');
     console.log('3 - Volver al menu principal');
+    console.log('x - Exportar contactos a archivo xlsx');
     console.log('*****************');
     if (menu)
         menu.close();
@@ -83,12 +129,100 @@ var menuDirectorio = function () {
             case '3':
                 (0, MenuPrincipal_1.menuPrin)();
                 break;
+            case 'x':
+                hojaExcel();
+                break;
             default:
                 (0, exports.menuDirectorio)();
         }
     });
 };
 exports.menuDirectorio = menuDirectorio;
+var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var inputMail;
+    return __generator(this, function (_a) {
+        process.stdout.write('\u001B[2J\u001B[0;0f');
+        menu = readline_1.default.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: false,
+        });
+        menu.question('Ingrese su direccion mail: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
+            var contactos, colNum, i, mailOptions;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        inputMail = input;
+                        ws.cell(1, 1).string('Nombre').style(style);
+                        ws.cell(1, 2).string('Apellido').style(style);
+                        ws.cell(1, 3).string('Apodo').style(style);
+                        ws.cell(1, 4).string('Nacimiento').style(style);
+                        ws.cell(1, 5).string('Telefono').style(style);
+                        ws.cell(1, 6).string('Direccion').style(style);
+                        return [4 /*yield*/, NuevoContactoMongo_1.Contacto.find({}).sort({ nombre: 1 })];
+                    case 1:
+                        contactos = _a.sent();
+                        colNum = 2;
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < contactos.length)) return [3 /*break*/, 10];
+                        return [4 /*yield*/, ws.cell(colNum, 1).string(contactos[i].nombre).style(style)];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, ws.cell(colNum, 2).string(contactos[i].apellido).style(style)];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, ws.cell(colNum, 3).string(contactos[i].apodo).style(style)];
+                    case 5:
+                        _a.sent();
+                        return [4 /*yield*/, ws.cell(colNum, 4).string(contactos[i].nacimiento).style(style)];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, ws.cell(colNum, 5).number(contactos[i].telefono).style(style)];
+                    case 7:
+                        _a.sent();
+                        return [4 /*yield*/, ws.cell(colNum, 6).string(contactos[i].direccion).style(style)];
+                    case 8:
+                        _a.sent();
+                        colNum += 1;
+                        _a.label = 9;
+                    case 9:
+                        i++;
+                        return [3 /*break*/, 2];
+                    case 10: return [4 /*yield*/, wb.write(__dirname + '/contactos.xlsx')];
+                    case 11:
+                        _a.sent();
+                        mailOptions = {
+                            from: 'nivi1023@gmail.com',
+                            to: inputMail,
+                            subject: 'Contactos exportados',
+                            text: '',
+                            attachments: [
+                                {
+                                    // filename and content type is derived from path
+                                    path: __dirname + '/contactos.xlsx',
+                                },
+                            ],
+                        };
+                        return [4 /*yield*/, mail.sendMail(mailOptions, function (error, info) {
+                                if (error) {
+                                    console.log(error);
+                                }
+                                else {
+                                    console.log('Email sent: ' + info.response);
+                                }
+                            })];
+                    case 12:
+                        _a.sent();
+                        (0, MenuPrincipal_1.menuPrin)('excel generado');
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        return [2 /*return*/];
+    });
+}); };
 var verContactos = function (num, num2) {
     if (num === void 0) { num = 0; }
     if (num2 === void 0) { num2 = 10; }

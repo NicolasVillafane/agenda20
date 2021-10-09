@@ -7,7 +7,6 @@ let menu: readline.Interface;
 
 export const menuPrin = (mensaje: string = ''): void => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
-
   console.log('*****************');
   console.log('Bienvenido a la contactera');
   console.log('');

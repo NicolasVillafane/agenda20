@@ -1,5 +1,6 @@
-const dbUrl: string =
-  'mongodb+srv://nivi1023:RC7LzwJeemUjcGM1@cluster0.t7iki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: __dirname + '/.env' });
+const dbUrl = process.env.DB_URL!;
 import mongoose from 'mongoose';
 // 'mongodb://localhost/contactos'
 mongoose
@@ -15,6 +16,35 @@ import { menuPrin } from './MenuPrincipal';
 import { Contacto } from './NuevoContactoMongo';
 import { editarContacto } from './EditarContacto';
 import { eliminarContacto } from './EliminarContacto';
+import nodemailer from 'nodemailer';
+
+const mail = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // use SSL
+  auth: {
+    user: 'nivi1023@gmail.com',
+    pass: process.env.MAIL_PASS!,
+  },
+});
+
+// tslint:disable-next-line: no-var-requires
+const xl = require('excel4node');
+
+// Create a new instance of a Workbook class
+const wb = new xl.Workbook();
+
+// Add Worksheets to the workbook
+const ws = wb.addWorksheet('Sheet 1');
+const ws2 = wb.addWorksheet('Sheet 2');
+
+// Create a reusable style
+const style = wb.createStyle({
+  font: {
+    color: '#040404',
+    size: 12,
+  },
+});
 
 let nombresFreno: number[] = [];
 let menu: readline.Interface;
@@ -27,6 +57,7 @@ export const menuDirectorio = () => {
   console.log('1 - Ver todos los contactos');
   console.log('2 - Ver una letra');
   console.log('3 - Volver al menu principal');
+  console.log('x - Exportar contactos a archivo xlsx');
 
   console.log('*****************');
 
@@ -49,9 +80,67 @@ export const menuDirectorio = () => {
       case '3':
         menuPrin();
         break;
+      case 'x':
+        hojaExcel();
+        break;
       default:
         menuDirectorio();
     }
+  });
+};
+const hojaExcel = async () => {
+  process.stdout.write('\u001B[2J\u001B[0;0f');
+
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+  });
+  let inputMail;
+  menu.question('Ingrese su direccion mail: ', async (input) => {
+    inputMail = input;
+    ws.cell(1, 1).string('Nombre').style(style);
+    ws.cell(1, 2).string('Apellido').style(style);
+    ws.cell(1, 3).string('Apodo').style(style);
+    ws.cell(1, 4).string('Nacimiento').style(style);
+    ws.cell(1, 5).string('Telefono').style(style);
+    ws.cell(1, 6).string('Direccion').style(style);
+
+    const contactos = await Contacto.find({}).sort({ nombre: 1 });
+    let colNum = 2;
+
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < contactos.length; i++) {
+      await ws.cell(colNum, 1).string(contactos[i].nombre).style(style);
+      await ws.cell(colNum, 2).string(contactos[i].apellido).style(style);
+      await ws.cell(colNum, 3).string(contactos[i].apodo).style(style);
+      await ws.cell(colNum, 4).string(contactos[i].nacimiento).style(style);
+      await ws.cell(colNum, 5).number(contactos[i].telefono).style(style);
+      await ws.cell(colNum, 6).string(contactos[i].direccion).style(style);
+      colNum += 1;
+    }
+
+    await wb.write(__dirname + '/contactos.xlsx');
+    const mailOptions = {
+      from: 'nivi1023@gmail.com',
+      to: inputMail,
+      subject: 'Contactos exportados',
+      text: '',
+      attachments: [
+        {
+          // filename and content type is derived from path
+          path: __dirname + '/contactos.xlsx',
+        },
+      ],
+    };
+    await mail.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+    menuPrin('excel generado');
   });
 };
 
