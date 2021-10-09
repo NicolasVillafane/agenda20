@@ -2,16 +2,23 @@
   "name": "contactera",
   "version": "1.0.0",
   "description": "Agenda de contactos para mantener ordenadas tus amistades, compañeros de trabajo y familia.",
-  "main": "app.js",
+  "main": "./src/MenuPrincipal.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/MenuPrincipal.js",
+    "start": "concurrently npm:start:*",
+    "lint": "tslint '*.ts'"
   },
   "author": "Nicolás Villafañe",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^6.2.1",
     "console-input": "^1.0.2",
     "dotenv": "^10.0.0",
     "keypress": "^0.2.1",
-    "mongoose": "^5.12.13"
+    "mongoose": "^5.13.9",
+    "nodemon": "^2.0.13",
+    "tslint": "^6.1.3",
+    "typescript": "^4.4.3"
   }
 }

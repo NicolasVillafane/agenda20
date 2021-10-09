@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const nuevoC = new mongoose.Schema({
   nombre: String,
@@ -16,6 +16,4 @@ const nuevoC = new mongoose.Schema({
   // telefono: undefined,
   // direccion: undefined,
 });
-const Contacto = mongoose.model('Contacto', nuevoC);
-
-module.exports = Contacto;
+export const Contacto = mongoose.model('Contacto', nuevoC);

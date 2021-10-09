@@ -1,12 +1,15 @@
-require('dotenv').config();
-const dbUrl = process.env.DB_URL;
-const mongoose = require('mongoose');
+const dbUrl: string =
+  'mongodb+srv://nivi1023:RC7LzwJeemUjcGM1@cluster0.t7iki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+import mongoose from 'mongoose';
 // 'mongodb://localhost/contactos'
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const Contacto = require('./nuevocontacto');
+mongoose
+  .connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .catch((error) => handleError(error));
+
+import { Contacto } from './NuevoContactoMongo';
 
 Contacto.insertMany([
   {
@@ -370,3 +373,7 @@ Contacto.insertMany([
     direccion: 'calle ficticia 123',
   },
 ]);
+
+function handleError(error: any): any {
+  throw new Error('Function not implemented.');
+}
