@@ -81,7 +81,7 @@ var mail = nodemailer_1.default.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: 'nivi1023@gmail.com',
+        user: 'agendacontactera@gmail.com',
         pass: process.env.MAIL_PASS,
     },
 });

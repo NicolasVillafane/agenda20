@@ -23,7 +23,7 @@ const mail = nodemailer.createTransport({
   port: 465,
   secure: true, // use SSL
   auth: {
-    user: 'nivi1023@gmail.com',
+    user: 'agendacontactera@gmail.com',
     pass: process.env.MAIL_PASS!,
   },
 });
