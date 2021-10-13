@@ -21,7 +21,6 @@ export const nuevoContacto = () => {
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    terminal: false,
   });
 
   let fechaHoy: Date | string = new Date();

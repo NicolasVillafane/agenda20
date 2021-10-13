@@ -55,7 +55,6 @@ var nuevoContacto = function () {
     menu = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout,
-        terminal: false,
     });
     var fechaHoy = new Date();
     var dd = String(fechaHoy.getDate()).padStart(2, '0');
