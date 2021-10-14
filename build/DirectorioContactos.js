@@ -76,6 +76,7 @@ var NuevoContactoMongo_1 = require("./NuevoContactoMongo");
 var EditarContacto_1 = require("./EditarContacto");
 var EliminarContacto_1 = require("./EliminarContacto");
 var nodemailer_1 = __importDefault(require("nodemailer"));
+var xlsx_1 = __importDefault(require("xlsx"));
 var mail = nodemailer_1.default.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -110,6 +111,7 @@ var menuDirectorio = function () {
     console.log('2 - Ver una letra');
     console.log('3 - Volver al menu principal');
     console.log('x - Exportar contactos a archivo xlsx');
+    console.log('z - Importar contactos desde archivo xlsx');
     console.log('*****************');
     if (menu)
         menu.close();
@@ -132,12 +134,83 @@ var menuDirectorio = function () {
             case 'x':
                 hojaExcel();
                 break;
+            case 'z':
+                importarContacto();
+                break;
             default:
                 (0, exports.menuDirectorio)();
         }
     });
 };
 exports.menuDirectorio = menuDirectorio;
+var importarContacto = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var workbook, workbookSheets, sheet, dataExcel, _loop_1, i;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                workbook = xlsx_1.default.readFile(__dirname + '/importar.xlsx');
+                workbookSheets = workbook.SheetNames;
+                sheet = workbookSheets[0];
+                dataExcel = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet]);
+                _loop_1 = function (i) {
+                    var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1, fechaHoy, dd, mm, yyyy, edadActual, calcularEdad;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                nombre1 = dataExcel[i].Nombre;
+                                apellido1 = dataExcel[i].Apellido;
+                                apodo1 = dataExcel[i].Apodo;
+                                diaN = dataExcel[i].Dia;
+                                mesN = dataExcel[i].Mes;
+                                añoN = dataExcel[i].Año;
+                                telefono1 = dataExcel[i].Telefono;
+                                direccion1 = dataExcel[i].Direccion;
+                                fechaHoy = new Date();
+                                dd = String(fechaHoy.getDate()).padStart(2, '0');
+                                mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+                                yyyy = fechaHoy.getFullYear();
+                                edadActual = yyyy - Number(añoN);
+                                calcularEdad = function () {
+                                    if (mm <= mesN || dd < diaN) {
+                                        edadActual -= 1;
+                                    }
+                                };
+                                return [4 /*yield*/, calcularEdad()];
+                            case 1:
+                                _b.sent();
+                                return [4 /*yield*/, new NuevoContactoMongo_1.Contacto({
+                                        nombre: nombre1,
+                                        apellido: apellido1,
+                                        apodo: apodo1,
+                                        nacimiento: diaN + "/" + mesN + "/" + añoN,
+                                        edad: edadActual,
+                                        telefono: telefono1,
+                                        direccion: direccion1,
+                                    }).save()];
+                            case 2:
+                                _b.sent();
+                                return [4 /*yield*/, (0, MenuPrincipal_1.menuPrin)('>Contacto guardado con exito<')];
+                            case 3:
+                                _b.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                };
+                i = 0;
+                _a.label = 1;
+            case 1:
+                if (!(i < dataExcel.length)) return [3 /*break*/, 4];
+                return [5 /*yield**/, _loop_1(i)];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3:
+                i++;
+                return [3 /*break*/, 1];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function () {
     var inputMail;
     return __generator(this, function (_a) {

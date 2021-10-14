@@ -17,6 +17,7 @@ import { Contacto } from './NuevoContactoMongo';
 import { editarContacto } from './EditarContacto';
 import { eliminarContacto } from './EliminarContacto';
 import nodemailer from 'nodemailer';
+import xlsx from 'xlsx';
 
 const mail = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -58,6 +59,7 @@ export const menuDirectorio = () => {
   console.log('2 - Ver una letra');
   console.log('3 - Volver al menu principal');
   console.log('x - Exportar contactos a archivo xlsx');
+  console.log('z - Importar contactos desde archivo xlsx');
 
   console.log('*****************');
 
@@ -83,11 +85,57 @@ export const menuDirectorio = () => {
       case 'x':
         hojaExcel();
         break;
+      case 'z':
+        importarContacto();
+        break;
       default:
         menuDirectorio();
     }
   });
 };
+
+const importarContacto = async () => {
+  const workbook = xlsx.readFile(__dirname + '/importar.xlsx');
+  const workbookSheets = workbook.SheetNames;
+  const sheet = workbookSheets[0];
+  const dataExcel: any = xlsx.utils.sheet_to_json(workbook.Sheets[sheet]);
+  // tslint:disable-next-line: prefer-for-of
+  for (let i = 0; i < dataExcel.length; i++) {
+    const nombre1: string = dataExcel[i].Nombre;
+    const apellido1 = dataExcel[i].Apellido;
+    const apodo1 = dataExcel[i].Apodo;
+    const diaN = dataExcel[i].Dia;
+    const mesN = dataExcel[i].Mes;
+    const añoN = dataExcel[i].Año;
+    const telefono1 = dataExcel[i].Telefono;
+    const direccion1 = dataExcel[i].Direccion;
+
+    const fechaHoy: Date | string = new Date();
+    const dd = String(fechaHoy.getDate()).padStart(2, '0');
+    const mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+    const yyyy = fechaHoy.getFullYear();
+
+    let edadActual = yyyy - Number(añoN);
+    const calcularEdad = () => {
+      if (mm <= mesN || dd < diaN) {
+        edadActual -= 1;
+      }
+    };
+    await calcularEdad();
+
+    await new Contacto({
+      nombre: nombre1,
+      apellido: apellido1,
+      apodo: apodo1,
+      nacimiento: `${diaN}/${mesN}/${añoN}`,
+      edad: edadActual,
+      telefono: telefono1,
+      direccion: direccion1,
+    }).save();
+    await menuPrin('>Contacto guardado con exito<');
+  }
+};
+
 const hojaExcel = async () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
 
