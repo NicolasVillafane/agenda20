@@ -97,8 +97,6 @@ export const menuDirectorio = () => {
 const importarContacto = async () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
 
-  console.log('Ingrese la localizacion del archivo de importacion.');
-  console.log('ej: "Home/User/Documents/importar.xlsx"');
   if (menu) menu.close();
 
   menu = readline.createInterface({
@@ -106,6 +104,15 @@ const importarContacto = async () => {
     output: process.stdout,
     terminal: false,
   });
+
+  console.log('Ingrese la localizacion del archivo de importacion.');
+  console.log('ej: "/home/user/Documents/importar.xlsx"');
+  console.log('');
+  console.log(
+    '>En caso de haber un error solo se guardaran aquellos contactos que cumplan con las validaciones<'
+  );
+  console.log('');
+
   menu.question('Localizacion: ', async (input) => {
     const path = input;
     const workbook = xlsx.readFile(path);
@@ -115,31 +122,54 @@ const importarContacto = async () => {
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < dataExcel.length; i++) {
       const nombre1: string = dataExcel[i].Nombre;
-      const apellido1 = dataExcel[i].Apellido;
-      const apodo1 = dataExcel[i].Apodo;
-      const diaN = dataExcel[i].Dia;
-      const mesN = dataExcel[i].Mes;
-      const añoN = dataExcel[i].Año;
-      const telefono1 = dataExcel[i].Telefono;
-      const direccion1 = dataExcel[i].Direccion;
+      const apellido1: string = dataExcel[i].Apellido;
+      const apodo1: string = dataExcel[i].Apodo;
+      const diaN: number = dataExcel[i].Dia;
+      const mesN: number = dataExcel[i].Mes;
+      const añoN: number = dataExcel[i].Año;
+      const telefono1: number = dataExcel[i].Telefono;
+      const direccion1: string = dataExcel[i].Direccion;
 
       const fechaHoy: Date | string = new Date();
       const dd = String(fechaHoy.getDate()).padStart(2, '0');
       const mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
       const yyyy = fechaHoy.getFullYear();
+
+      const val1 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(nombre1);
+      const val2 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(apellido1);
+      const val3 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(apodo1);
       if (
+        nombre1.length <= 15 &&
         nombre1 &&
+        isNaN(Number(nombre1)) === true &&
+        val1 === true &&
+        apellido1.length <= 15 &&
         apellido1 &&
+        isNaN(Number(apellido1)) === true &&
+        val2 === true &&
+        apodo1.length <= 15 &&
         apodo1 &&
+        isNaN(Number(apodo1)) === true &&
+        val3 === true &&
+        isNaN(diaN) === false &&
+        diaN <= 31 &&
         diaN &&
+        isNaN(mesN) === false &&
+        mesN <= 12 &&
         mesN &&
+        isNaN(añoN) === false &&
+        añoN < yyyy &&
         añoN &&
+        isNaN(telefono1) === false &&
         telefono1 &&
-        direccion1
+        telefono1.toString().length === 8 &&
+        isNaN(Number(direccion1)) === true &&
+        direccion1 &&
+        direccion1.length <= 30
       ) {
         let edadActual = yyyy - Number(añoN);
         const calcularEdad = () => {
-          if (mm <= mesN || dd < diaN) {
+          if (Number(mm) <= mesN || Number(dd) < diaN) {
             edadActual -= 1;
           }
         };

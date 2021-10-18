@@ -146,8 +146,6 @@ exports.menuDirectorio = menuDirectorio;
 var importarContacto = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         process.stdout.write('\u001B[2J\u001B[0;0f');
-        console.log('Ingrese la localizacion del archivo de importacion.');
-        console.log('ej: "Home/User/Documents/importar.xlsx"');
         if (menu)
             menu.close();
         menu = readline_1.default.createInterface({
@@ -155,6 +153,11 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
             output: process.stdout,
             terminal: false,
         });
+        console.log('Ingrese la localizacion del archivo de importacion.');
+        console.log('ej: "/home/user/Documents/importar.xlsx"');
+        console.log('');
+        console.log('>En caso de haber un error solo se guardaran aquellos contactos que cumplan con las validaciones<');
+        console.log('');
         menu.question('Localizacion: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
             var path, workbook, workbookSheets, sheet, dataExcel, _loop_1, i;
             return __generator(this, function (_a) {
@@ -166,7 +169,7 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                         sheet = workbookSheets[0];
                         dataExcel = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet]);
                         _loop_1 = function (i) {
-                            var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1, fechaHoy, dd, mm, yyyy, edadActual_1, calcularEdad;
+                            var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1, fechaHoy, dd, mm, yyyy, val1, val2, val3, edadActual_1, calcularEdad;
                             return __generator(this, function (_b) {
                                 switch (_b.label) {
                                     case 0:
@@ -182,17 +185,39 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                                         dd = String(fechaHoy.getDate()).padStart(2, '0');
                                         mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
                                         yyyy = fechaHoy.getFullYear();
-                                        if (!(nombre1 &&
+                                        val1 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(nombre1);
+                                        val2 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(apellido1);
+                                        val3 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(apodo1);
+                                        if (!(nombre1.length <= 15 &&
+                                            nombre1 &&
+                                            isNaN(Number(nombre1)) === true &&
+                                            val1 === true &&
+                                            apellido1.length <= 15 &&
                                             apellido1 &&
+                                            isNaN(Number(apellido1)) === true &&
+                                            val2 === true &&
+                                            apodo1.length <= 15 &&
                                             apodo1 &&
+                                            isNaN(Number(apodo1)) === true &&
+                                            val3 === true &&
+                                            isNaN(diaN) === false &&
+                                            diaN <= 31 &&
                                             diaN &&
+                                            isNaN(mesN) === false &&
+                                            mesN <= 12 &&
                                             mesN &&
+                                            isNaN(añoN) === false &&
+                                            añoN < yyyy &&
                                             añoN &&
+                                            isNaN(telefono1) === false &&
                                             telefono1 &&
-                                            direccion1)) return [3 /*break*/, 4];
+                                            telefono1.toString().length === 8 &&
+                                            isNaN(Number(direccion1)) === true &&
+                                            direccion1 &&
+                                            direccion1.length <= 30)) return [3 /*break*/, 4];
                                         edadActual_1 = yyyy - Number(añoN);
                                         calcularEdad = function () {
-                                            if (mm <= mesN || dd < diaN) {
+                                            if (Number(mm) <= mesN || Number(dd) < diaN) {
                                                 edadActual_1 -= 1;
                                             }
                                         };
