@@ -95,45 +95,71 @@ export const menuDirectorio = () => {
 };
 
 const importarContacto = async () => {
-  const workbook = xlsx.readFile(__dirname + '/importar.xlsx');
-  const workbookSheets = workbook.SheetNames;
-  const sheet = workbookSheets[0];
-  const dataExcel: any = xlsx.utils.sheet_to_json(workbook.Sheets[sheet]);
-  // tslint:disable-next-line: prefer-for-of
-  for (let i = 0; i < dataExcel.length; i++) {
-    const nombre1: string = dataExcel[i].Nombre;
-    const apellido1 = dataExcel[i].Apellido;
-    const apodo1 = dataExcel[i].Apodo;
-    const diaN = dataExcel[i].Dia;
-    const mesN = dataExcel[i].Mes;
-    const añoN = dataExcel[i].Año;
-    const telefono1 = dataExcel[i].Telefono;
-    const direccion1 = dataExcel[i].Direccion;
+  process.stdout.write('\u001B[2J\u001B[0;0f');
 
-    const fechaHoy: Date | string = new Date();
-    const dd = String(fechaHoy.getDate()).padStart(2, '0');
-    const mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
-    const yyyy = fechaHoy.getFullYear();
+  console.log('Ingrese la localizacion del archivo de importacion.');
+  console.log('ej: "Home/User/Documents/importar.xlsx"');
+  if (menu) menu.close();
 
-    let edadActual = yyyy - Number(añoN);
-    const calcularEdad = () => {
-      if (mm <= mesN || dd < diaN) {
-        edadActual -= 1;
+  menu = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+  });
+  menu.question('Localizacion: ', async (input) => {
+    const path = input;
+    const workbook = xlsx.readFile(path);
+    const workbookSheets = workbook.SheetNames;
+    const sheet = workbookSheets[0];
+    const dataExcel: any = xlsx.utils.sheet_to_json(workbook.Sheets[sheet]);
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < dataExcel.length; i++) {
+      const nombre1: string = dataExcel[i].Nombre;
+      const apellido1 = dataExcel[i].Apellido;
+      const apodo1 = dataExcel[i].Apodo;
+      const diaN = dataExcel[i].Dia;
+      const mesN = dataExcel[i].Mes;
+      const añoN = dataExcel[i].Año;
+      const telefono1 = dataExcel[i].Telefono;
+      const direccion1 = dataExcel[i].Direccion;
+
+      const fechaHoy: Date | string = new Date();
+      const dd = String(fechaHoy.getDate()).padStart(2, '0');
+      const mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+      const yyyy = fechaHoy.getFullYear();
+      if (
+        nombre1 &&
+        apellido1 &&
+        apodo1 &&
+        diaN &&
+        mesN &&
+        añoN &&
+        telefono1 &&
+        direccion1
+      ) {
+        let edadActual = yyyy - Number(añoN);
+        const calcularEdad = () => {
+          if (mm <= mesN || dd < diaN) {
+            edadActual -= 1;
+          }
+        };
+        await calcularEdad();
+
+        await new Contacto({
+          nombre: nombre1,
+          apellido: apellido1,
+          apodo: apodo1,
+          nacimiento: `${diaN}/${mesN}/${añoN}`,
+          edad: edadActual,
+          telefono: telefono1,
+          direccion: direccion1,
+        }).save();
+        await menuPrin('>Contacto guardado con exito<');
+      } else {
+        menuPrin('>Datos invalidos<');
       }
-    };
-    await calcularEdad();
-
-    await new Contacto({
-      nombre: nombre1,
-      apellido: apellido1,
-      apodo: apodo1,
-      nacimiento: `${diaN}/${mesN}/${añoN}`,
-      edad: edadActual,
-      telefono: telefono1,
-      direccion: direccion1,
-    }).save();
-    await menuPrin('>Contacto guardado con exito<');
-  }
+    }
+  });
 };
 
 const hojaExcel = async () => {
