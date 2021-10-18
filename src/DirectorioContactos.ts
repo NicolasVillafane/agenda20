@@ -18,6 +18,7 @@ import { editarContacto } from './EditarContacto';
 import { eliminarContacto } from './EliminarContacto';
 import nodemailer from 'nodemailer';
 import xlsx from 'xlsx';
+import fs from 'fs';
 
 const mail = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -119,6 +120,7 @@ const importarContacto = async () => {
     const workbookSheets = workbook.SheetNames;
     const sheet = workbookSheets[0];
     const dataExcel: any = xlsx.utils.sheet_to_json(workbook.Sheets[sheet]);
+    let seGuardo = false;
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < dataExcel.length; i++) {
       const nombre1: string = dataExcel[i].Nombre;
@@ -138,6 +140,7 @@ const importarContacto = async () => {
       const val1 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(nombre1);
       const val2 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(apellido1);
       const val3 = /^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/.test(apodo1);
+
       if (
         nombre1.length <= 15 &&
         nombre1 &&
@@ -184,11 +187,13 @@ const importarContacto = async () => {
           telefono: telefono1,
           direccion: direccion1,
         }).save();
+
         await menuPrin('>Contacto guardado con exito<');
       } else {
         menuPrin('>Datos invalidos<');
       }
     }
+    fs.unlinkSync(input);
   });
 };
 

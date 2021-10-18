@@ -77,6 +77,7 @@ var EditarContacto_1 = require("./EditarContacto");
 var EliminarContacto_1 = require("./EliminarContacto");
 var nodemailer_1 = __importDefault(require("nodemailer"));
 var xlsx_1 = __importDefault(require("xlsx"));
+var fs_1 = __importDefault(require("fs"));
 var mail = nodemailer_1.default.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -159,7 +160,7 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
         console.log('>En caso de haber un error solo se guardaran aquellos contactos que cumplan con las validaciones<');
         console.log('');
         menu.question('Localizacion: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
-            var path, workbook, workbookSheets, sheet, dataExcel, _loop_1, i;
+            var path, workbook, workbookSheets, sheet, dataExcel, seGuardo, _loop_1, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -168,6 +169,7 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                         workbookSheets = workbook.SheetNames;
                         sheet = workbookSheets[0];
                         dataExcel = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet]);
+                        seGuardo = false;
                         _loop_1 = function (i) {
                             var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1, fechaHoy, dd, mm, yyyy, val1, val2, val3, edadActual_1, calcularEdad;
                             return __generator(this, function (_b) {
@@ -257,7 +259,9 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                     case 3:
                         i++;
                         return [3 /*break*/, 1];
-                    case 4: return [2 /*return*/];
+                    case 4:
+                        fs_1.default.unlinkSync(input);
+                        return [2 /*return*/];
                 }
             });
         }); });
