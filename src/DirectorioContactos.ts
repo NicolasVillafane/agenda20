@@ -2,6 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/.env' });
 const dbUrl = process.env.DB_URL!;
 import mongoose from 'mongoose';
+// tslint:disable-next-line: no-var-requires
+const term = require('terminal-kit').terminal;
 // 'mongodb://localhost/contactos'
 mongoose
   .connect(dbUrl, {
@@ -20,6 +22,7 @@ import nodemailer from 'nodemailer';
 import xlsx from 'xlsx';
 import fs from 'fs';
 import { execSync } from 'child_process';
+import { verify } from 'crypto';
 
 const mail = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -54,46 +57,46 @@ let menu: readline.Interface;
 export const menuDirectorio = () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
 
+  const items = [
+    'Ver todos los contactos',
+    'Ver una letra',
+    'Volver al menu principal',
+    'Exportar contactos',
+    'Importar contactos',
+  ];
+  const options = {
+    y: 3, // the menu will be on the top of the terminal
+    style: term.inverse,
+    selectedStyle: term.dim.blue.bgGreen,
+  };
+  term.singleLineMenu(
+    items,
+    options,
+    (
+      _error: any,
+      response: { selectedIndex: any; selectedText: any; x: any; y: any }
+    ) => {
+      if (response.selectedIndex === 0) {
+        verContactos();
+      } else if (response.selectedIndex === 1) {
+        verLetra();
+      } else if (response.selectedIndex === 2) {
+        menuPrin();
+      } else if (response.selectedIndex === 3) {
+        hojaExcel();
+      } else {
+        importarContacto();
+      }
+    }
+  );
+  process.stdout.write('\u001B[2J\u001B[0;0f');
+
   console.log('*****************');
   console.log('Directorio de contactos');
   console.log('');
-  console.log('1 - Ver todos los contactos');
-  console.log('2 - Ver una letra');
-  console.log('3 - Volver al menu principal');
-  console.log('x - Exportar contactos a archivo xlsx');
-  console.log('z - Importar contactos desde archivo xlsx');
-
   console.log('*****************');
 
   if (menu) menu.close();
-
-  menu = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false,
-  });
-
-  menu.question('Opcion: ', (input) => {
-    switch (input) {
-      case '1':
-        verContactos();
-        break;
-      case '2':
-        verLetra();
-        break;
-      case '3':
-        menuPrin();
-        break;
-      case 'x':
-        hojaExcel();
-        break;
-      case 'z':
-        importarContacto();
-        break;
-      default:
-        menuDirectorio();
-    }
-  });
 };
 
 // tslint:disable-next-line: no-shadowed-variable
@@ -363,7 +366,7 @@ const verLetra = () => {
   });
 };
 
-const mostrarContacto = async (num: number) => {
+export const mostrarContacto = async (num: number) => {
   let i: number;
   process.stdout.write('\u001B[2J\u001B[0;0f');
   const contactos = await Contacto.find({}).sort({ nombre: 1 });

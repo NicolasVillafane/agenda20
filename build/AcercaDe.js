@@ -18,16 +18,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.acercaDe = void 0;
 var MenuPrincipal_1 = require("./MenuPrincipal");
-var readline_1 = __importDefault(require("readline"));
 var datos = __importStar(require("./datos.json"));
+// tslint:disable-next-line: no-var-requires
+var term = require('terminal-kit').terminal;
 var menu;
 var acercaDe = function () {
+    process.stdout.write('\u001B[2J\u001B[0;0f');
+    var items = ['Menu Principal'];
+    var options = {
+        y: 13,
+        style: term.inverse,
+        selectedStyle: term.dim.blue.bgGreen,
+    };
+    term.singleLineMenu(items, options, function (_error, response) {
+        if (response.selectedIndex === 0) {
+            (0, MenuPrincipal_1.menuPrin)();
+        }
+        else {
+            process.exit();
+        }
+    });
     process.stdout.write('\u001B[2J\u001B[0;0f');
     console.log('*****************');
     console.log("Nombre: " + datos.name);
@@ -36,20 +49,13 @@ var acercaDe = function () {
     console.log('');
     console.log("Autor: " + datos.author);
     console.log('');
-    console.log("Descripcion: " + datos.description);
+    console.log("" + datos.description);
     console.log('');
     console.log('*****************');
     console.log('');
-    console.log('1 - Volver al menu principal');
+    console.log('');
     console.log('');
     if (menu)
         menu.close();
-    menu = readline_1.default.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    menu.question('Opcion: ', function (input) {
-        input === '1' ? (0, MenuPrincipal_1.menuPrin)() : (0, exports.acercaDe)();
-    });
 };
 exports.acercaDe = acercaDe;

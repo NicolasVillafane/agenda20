@@ -58,11 +58,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verContactos = exports.menuDirectorio = void 0;
+exports.mostrarContacto = exports.verContactos = exports.menuDirectorio = void 0;
 var dotenv = __importStar(require("dotenv"));
 dotenv.config({ path: __dirname + '/.env' });
 var dbUrl = process.env.DB_URL;
 var mongoose_1 = __importDefault(require("mongoose"));
+// tslint:disable-next-line: no-var-requires
+var term = require('terminal-kit').terminal;
 // 'mongodb://localhost/contactos'
 mongoose_1.default
     .connect(dbUrl, {
@@ -106,43 +108,42 @@ var nombresFreno = [];
 var menu;
 var menuDirectorio = function () {
     process.stdout.write('\u001B[2J\u001B[0;0f');
+    var items = [
+        'Ver todos los contactos',
+        'Ver una letra',
+        'Volver al menu principal',
+        'Exportar contactos',
+        'Importar contactos',
+    ];
+    var options = {
+        y: 3,
+        style: term.inverse,
+        selectedStyle: term.dim.blue.bgGreen,
+    };
+    term.singleLineMenu(items, options, function (_error, response) {
+        if (response.selectedIndex === 0) {
+            (0, exports.verContactos)();
+        }
+        else if (response.selectedIndex === 1) {
+            verLetra();
+        }
+        else if (response.selectedIndex === 2) {
+            (0, MenuPrincipal_1.menuPrin)();
+        }
+        else if (response.selectedIndex === 3) {
+            hojaExcel();
+        }
+        else {
+            importarContacto();
+        }
+    });
+    process.stdout.write('\u001B[2J\u001B[0;0f');
     console.log('*****************');
     console.log('Directorio de contactos');
     console.log('');
-    console.log('1 - Ver todos los contactos');
-    console.log('2 - Ver una letra');
-    console.log('3 - Volver al menu principal');
-    console.log('x - Exportar contactos a archivo xlsx');
-    console.log('z - Importar contactos desde archivo xlsx');
     console.log('*****************');
     if (menu)
         menu.close();
-    menu = readline_1.default.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        terminal: false,
-    });
-    menu.question('Opcion: ', function (input) {
-        switch (input) {
-            case '1':
-                (0, exports.verContactos)();
-                break;
-            case '2':
-                verLetra();
-                break;
-            case '3':
-                (0, MenuPrincipal_1.menuPrin)();
-                break;
-            case 'x':
-                hojaExcel();
-                break;
-            case 'z':
-                importarContacto();
-                break;
-            default:
-                (0, exports.menuDirectorio)();
-        }
-    });
 };
 exports.menuDirectorio = menuDirectorio;
 // tslint:disable-next-line: no-shadowed-variable
@@ -433,7 +434,7 @@ var verContactos = function (num, num2) {
                         }
                         else if (isNaN(Number(input)) === false && input) {
                             nombresFreno = [];
-                            mostrarContacto(Number(input));
+                            (0, exports.mostrarContacto)(Number(input));
                         }
                         else {
                             (0, exports.verContactos)();
@@ -536,7 +537,7 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
                             (0, MenuPrincipal_1.menuPrin)();
                             break;
                         default:
-                            mostrarContacto(num);
+                            (0, exports.mostrarContacto)(num);
                             break;
                     }
                 });
@@ -544,6 +545,7 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
+exports.mostrarContacto = mostrarContacto;
 function handleError(error) {
     throw new Error('Function not implemented.');
 }
