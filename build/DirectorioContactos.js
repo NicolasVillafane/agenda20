@@ -78,6 +78,7 @@ var EliminarContacto_1 = require("./EliminarContacto");
 var nodemailer_1 = __importDefault(require("nodemailer"));
 var xlsx_1 = __importDefault(require("xlsx"));
 var fs_1 = __importDefault(require("fs"));
+var child_process_1 = require("child_process");
 var mail = nodemailer_1.default.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -144,6 +145,11 @@ var menuDirectorio = function () {
     });
 };
 exports.menuDirectorio = menuDirectorio;
+// tslint:disable-next-line: no-shadowed-variable
+var mandarMail = function (mail) {
+    (0, child_process_1.execSync)("xdg-email \"mailto:" + mail + "\"");
+    (0, exports.verContactos)();
+};
 var importarContacto = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         process.stdout.write('\u001B[2J\u001B[0;0f');
@@ -488,6 +494,7 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
                         console.log("Nombre: " + contactos[i].nombre);
                         console.log("Apellido: " + contactos[i].apellido);
                         console.log("Apodo: " + contactos[i].apodo);
+                        console.log("Email: " + contactos[i].email);
                         console.log("A\u00F1o de Nacimiento: " + contactos[i].nacimiento);
                         console.log("Edad: " + contactos[i].edad);
                         console.log("Telefono: " + contactos[i].telefono);
@@ -501,8 +508,9 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
                 console.log('');
                 console.log('1 - Editar contacto');
                 console.log('2 - Eliminar contacto');
-                console.log('3 - Volver a todos los contactos');
-                console.log('4 - Volver al menu principal');
+                console.log('3 - Enviar mail al contacto');
+                console.log('4 - Volver a todos los contactos');
+                console.log('5 - Volver al menu principal');
                 if (menu)
                     menu.close();
                 menu = readline_1.default.createInterface({
@@ -519,9 +527,12 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
                             (0, EliminarContacto_1.eliminarContacto)(contactos[i - 1]._id);
                             break;
                         case '3':
-                            (0, exports.verContactos)();
+                            mandarMail(contactos[i - 1].email);
                             break;
                         case '4':
+                            (0, exports.verContactos)();
+                            break;
+                        case '5':
                             (0, MenuPrincipal_1.menuPrin)();
                             break;
                         default:

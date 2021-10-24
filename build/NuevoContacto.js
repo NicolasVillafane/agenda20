@@ -45,7 +45,7 @@ var MenuPrincipal_1 = require("./MenuPrincipal");
 var NuevoContactoMongo_1 = require("./NuevoContactoMongo");
 var menu;
 // tslint:disable-next-line: one-variable-per-declaration
-var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1;
+var nombre1, apellido1, apodo1, email1, diaN, mesN, añoN, telefono1, direccion1;
 var nuevoContacto = function () {
     process.stdout.write('\u001B[2J\u001B[0;0f');
     if (menu)
@@ -135,6 +135,31 @@ var nuevoContacto = function () {
             });
         });
     };
+    var email = function () {
+        return new Promise(function (resolve, reject) {
+            menu.question('Email: ', function (input) {
+                var res = /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(input);
+                if (input.length <= 30 &&
+                    input &&
+                    isNaN(Number(input)) === true &&
+                    res === true &&
+                    input.includes('@') === true &&
+                    input.includes('.') === true) {
+                    email1 = input;
+                    resolve();
+                }
+                else {
+                    console.clear();
+                    console.log('Ingrese los datos del nuevo contacto o presione esc para volver al menu: ');
+                    console.log('');
+                    console.log("Nombre: " + nombre1);
+                    console.log("Apellido: " + apellido1);
+                    console.log("Apodo: " + apodo1);
+                    main('4');
+                }
+            });
+        });
+    };
     var diaNacimiento = function () {
         return new Promise(function (resolve, reject) {
             menu.question('Dia de nacimiento: ', function (input) {
@@ -149,7 +174,8 @@ var nuevoContacto = function () {
                     console.log("Nombre: " + nombre1);
                     console.log("Apellido: " + apellido1);
                     console.log("Apodo: " + apodo1);
-                    main('4');
+                    console.log("Email: " + email1);
+                    main('5');
                 }
             });
         });
@@ -168,8 +194,9 @@ var nuevoContacto = function () {
                     console.log("Nombre: " + nombre1);
                     console.log("Apellido: " + apellido1);
                     console.log("Apodo: " + apodo1);
+                    console.log("Email: " + email1);
                     console.log("Dia de nacimiento: " + diaN);
-                    main('5');
+                    main('6');
                 }
             });
         });
@@ -188,9 +215,10 @@ var nuevoContacto = function () {
                     console.log("Nombre: " + nombre1);
                     console.log("Apellido: " + apellido1);
                     console.log("Apodo: " + apodo1);
+                    console.log("Email: " + email1);
                     console.log("Dia de nacimiento: " + diaN);
                     console.log("Mes de nacimiento: " + mesN);
-                    main('6');
+                    main('7');
                 }
             });
         });
@@ -209,10 +237,11 @@ var nuevoContacto = function () {
                     console.log("Nombre: " + nombre1);
                     console.log("Apellido: " + apellido1);
                     console.log("Apodo: " + apodo1);
+                    console.log("Email: " + email1);
                     console.log("Dia de nacimiento: " + diaN);
                     console.log("Mes de nacimiento: " + mesN);
                     console.log("A\u00F1o de nacimiento: " + añoN);
-                    main('7');
+                    main('8');
                 }
             });
         });
@@ -231,11 +260,12 @@ var nuevoContacto = function () {
                     console.log("Nombre: " + nombre1);
                     console.log("Apellido: " + apellido1);
                     console.log("Apodo: " + apodo1);
+                    console.log("Email: " + email1);
                     console.log("Dia de nacimiento: " + diaN);
                     console.log("Mes de nacimiento: " + mesN);
                     console.log("A\u00F1o de nacimiento: " + añoN);
                     console.log("Telefono (8 digitos): " + telefono1);
-                    main('8');
+                    main('9');
                 }
             });
         });
@@ -262,106 +292,118 @@ var nuevoContacto = function () {
                         case '6': return [3 /*break*/, 11];
                         case '7': return [3 /*break*/, 13];
                         case '8': return [3 /*break*/, 15];
+                        case '9': return [3 /*break*/, 17];
                     }
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 1: return [4 /*yield*/, nombre()];
                 case 2:
                     _b.sent();
-                    return [3 /*break*/, 17];
+                    return [3 /*break*/, 19];
                 case 3: return [4 /*yield*/, apellido()];
                 case 4:
                     _b.sent();
-                    return [3 /*break*/, 17];
+                    return [3 /*break*/, 19];
                 case 5: return [4 /*yield*/, apodo()];
                 case 6:
                     _b.sent();
-                    return [3 /*break*/, 17];
-                case 7: return [4 /*yield*/, diaNacimiento()];
+                    return [3 /*break*/, 19];
+                case 7: return [4 /*yield*/, email()];
                 case 8:
                     _b.sent();
-                    return [3 /*break*/, 17];
-                case 9: return [4 /*yield*/, mesNacimiento()];
+                    return [3 /*break*/, 19];
+                case 9: return [4 /*yield*/, diaNacimiento()];
                 case 10:
                     _b.sent();
-                    return [3 /*break*/, 17];
-                case 11: return [4 /*yield*/, añoNacimiento()];
+                    return [3 /*break*/, 19];
+                case 11: return [4 /*yield*/, mesNacimiento()];
                 case 12:
                     _b.sent();
-                    return [3 /*break*/, 17];
-                case 13: return [4 /*yield*/, telefono()];
+                    return [3 /*break*/, 19];
+                case 13: return [4 /*yield*/, añoNacimiento()];
                 case 14:
                     _b.sent();
-                    return [3 /*break*/, 17];
-                case 15:
-                    direccion();
-                    return [3 /*break*/, 17];
+                    return [3 /*break*/, 19];
+                case 15: return [4 /*yield*/, telefono()];
                 case 16:
-                    main('1');
-                    return [3 /*break*/, 17];
-                case 17:
-                    if (!!nombre1) return [3 /*break*/, 19];
-                    return [4 /*yield*/, nombre()];
-                case 18:
                     _b.sent();
-                    _b.label = 19;
+                    return [3 /*break*/, 19];
+                case 17:
+                    direccion();
+                    return [3 /*break*/, 19];
+                case 18:
+                    main('1');
+                    return [3 /*break*/, 19];
                 case 19:
-                    if (!!apellido1) return [3 /*break*/, 21];
-                    return [4 /*yield*/, apellido()];
+                    if (!!nombre1) return [3 /*break*/, 21];
+                    return [4 /*yield*/, nombre()];
                 case 20:
                     _b.sent();
                     _b.label = 21;
                 case 21:
-                    if (!!apodo1) return [3 /*break*/, 23];
-                    return [4 /*yield*/, apodo()];
+                    if (!!apellido1) return [3 /*break*/, 23];
+                    return [4 /*yield*/, apellido()];
                 case 22:
                     _b.sent();
                     _b.label = 23;
                 case 23:
-                    if (!!diaN) return [3 /*break*/, 25];
-                    return [4 /*yield*/, diaNacimiento()];
+                    if (!!apodo1) return [3 /*break*/, 25];
+                    return [4 /*yield*/, apodo()];
                 case 24:
                     _b.sent();
                     _b.label = 25;
                 case 25:
-                    if (!!mesN) return [3 /*break*/, 27];
-                    return [4 /*yield*/, mesNacimiento()];
+                    if (!!email1) return [3 /*break*/, 27];
+                    return [4 /*yield*/, email()];
                 case 26:
                     _b.sent();
                     _b.label = 27;
                 case 27:
-                    if (!!añoN) return [3 /*break*/, 29];
-                    return [4 /*yield*/, añoNacimiento()];
+                    if (!!diaN) return [3 /*break*/, 29];
+                    return [4 /*yield*/, diaNacimiento()];
                 case 28:
                     _b.sent();
                     _b.label = 29;
                 case 29:
-                    if (!!telefono1) return [3 /*break*/, 31];
-                    return [4 /*yield*/, telefono()];
+                    if (!!mesN) return [3 /*break*/, 31];
+                    return [4 /*yield*/, mesNacimiento()];
                 case 30:
                     _b.sent();
                     _b.label = 31;
                 case 31:
-                    if (!!direccion1) return [3 /*break*/, 33];
-                    return [4 /*yield*/, direccion()];
+                    if (!!añoN) return [3 /*break*/, 33];
+                    return [4 /*yield*/, añoNacimiento()];
                 case 32:
                     _b.sent();
                     _b.label = 33;
-                case 33: return [4 /*yield*/, calcularEdad()];
+                case 33:
+                    if (!!telefono1) return [3 /*break*/, 35];
+                    return [4 /*yield*/, telefono()];
                 case 34:
+                    _b.sent();
+                    _b.label = 35;
+                case 35:
+                    if (!!direccion1) return [3 /*break*/, 37];
+                    return [4 /*yield*/, direccion()];
+                case 36:
+                    _b.sent();
+                    _b.label = 37;
+                case 37: return [4 /*yield*/, calcularEdad()];
+                case 38:
                     _b.sent();
                     return [4 /*yield*/, new NuevoContactoMongo_1.Contacto({
                             nombre: nombre1,
                             apellido: apellido1,
                             apodo: apodo1,
+                            email: email1,
                             nacimiento: diaN + "/" + mesN + "/" + añoN,
                             edad: edadActual,
                             telefono: telefono1,
                             direccion: direccion1,
                         }).save()];
-                case 35:
+                case 39:
                     _b.sent();
                     return [4 /*yield*/, (0, MenuPrincipal_1.menuPrin)('>Contacto guardado con exito<')];
-                case 36:
+                case 40:
                     _b.sent();
                     return [2 /*return*/];
             }

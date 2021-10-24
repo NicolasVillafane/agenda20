@@ -7,6 +7,7 @@ let menu: readline.Interface;
 let nombre1: string,
   apellido1: string,
   apodo1: string,
+  email1: string,
   diaN: string,
   mesN: string,
   añoN: string,
@@ -117,6 +118,34 @@ export const nuevoContacto = () => {
       });
     });
   };
+  const email = () => {
+    return new Promise<void>((resolve, reject) => {
+      menu.question('Email: ', (input) => {
+        const res = /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(input);
+        if (
+          input.length <= 30 &&
+          input &&
+          isNaN(Number(input)) === true &&
+          res === true &&
+          input.includes('@') === true &&
+          input.includes('.') === true
+        ) {
+          email1 = input;
+          resolve();
+        } else {
+          console.clear();
+          console.log(
+            'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
+          );
+          console.log('');
+          console.log(`Nombre: ${nombre1}`);
+          console.log(`Apellido: ${apellido1}`);
+          console.log(`Apodo: ${apodo1}`);
+          main('4');
+        }
+      });
+    });
+  };
   const diaNacimiento = () => {
     return new Promise<void>((resolve, reject) => {
       menu.question('Dia de nacimiento: ', (input) => {
@@ -132,7 +161,8 @@ export const nuevoContacto = () => {
           console.log(`Nombre: ${nombre1}`);
           console.log(`Apellido: ${apellido1}`);
           console.log(`Apodo: ${apodo1}`);
-          main('4');
+          console.log(`Email: ${email1}`);
+          main('5');
         }
       });
     });
@@ -152,8 +182,9 @@ export const nuevoContacto = () => {
           console.log(`Nombre: ${nombre1}`);
           console.log(`Apellido: ${apellido1}`);
           console.log(`Apodo: ${apodo1}`);
+          console.log(`Email: ${email1}`);
           console.log(`Dia de nacimiento: ${diaN}`);
-          main('5');
+          main('6');
         }
       });
     });
@@ -173,9 +204,10 @@ export const nuevoContacto = () => {
           console.log(`Nombre: ${nombre1}`);
           console.log(`Apellido: ${apellido1}`);
           console.log(`Apodo: ${apodo1}`);
+          console.log(`Email: ${email1}`);
           console.log(`Dia de nacimiento: ${diaN}`);
           console.log(`Mes de nacimiento: ${mesN}`);
-          main('6');
+          main('7');
         }
       });
     });
@@ -196,10 +228,11 @@ export const nuevoContacto = () => {
           console.log(`Nombre: ${nombre1}`);
           console.log(`Apellido: ${apellido1}`);
           console.log(`Apodo: ${apodo1}`);
+          console.log(`Email: ${email1}`);
           console.log(`Dia de nacimiento: ${diaN}`);
           console.log(`Mes de nacimiento: ${mesN}`);
           console.log(`Año de nacimiento: ${añoN}`);
-          main('7');
+          main('8');
         }
       });
     });
@@ -219,11 +252,12 @@ export const nuevoContacto = () => {
           console.log(`Nombre: ${nombre1}`);
           console.log(`Apellido: ${apellido1}`);
           console.log(`Apodo: ${apodo1}`);
+          console.log(`Email: ${email1}`);
           console.log(`Dia de nacimiento: ${diaN}`);
           console.log(`Mes de nacimiento: ${mesN}`);
           console.log(`Año de nacimiento: ${añoN}`);
           console.log(`Telefono (8 digitos): ${telefono1}`);
-          main('8');
+          main('9');
         }
       });
     });
@@ -248,18 +282,21 @@ export const nuevoContacto = () => {
         await apodo();
         break;
       case '4':
-        await diaNacimiento();
+        await email();
         break;
       case '5':
-        await mesNacimiento();
+        await diaNacimiento();
         break;
       case '6':
-        await añoNacimiento();
+        await mesNacimiento();
         break;
       case '7':
-        await telefono();
+        await añoNacimiento();
         break;
       case '8':
+        await telefono();
+        break;
+      case '9':
         direccion();
         break;
       default:
@@ -275,6 +312,9 @@ export const nuevoContacto = () => {
     }
     if (!apodo1) {
       await apodo();
+    }
+    if (!email1) {
+      await email();
     }
     if (!diaN) {
       await diaNacimiento();
@@ -298,6 +338,7 @@ export const nuevoContacto = () => {
       nombre: nombre1,
       apellido: apellido1,
       apodo: apodo1,
+      email: email1,
       nacimiento: `${diaN}/${mesN}/${añoN}`,
       edad: edadActual,
       telefono: telefono1,

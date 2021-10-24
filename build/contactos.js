@@ -1,10 +1,32 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dbUrl = 'mongodb+srv://nivi1023:RC7LzwJeemUjcGM1@cluster0.t7iki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+var dotenv = __importStar(require("dotenv"));
+dotenv.config({ path: __dirname + '/.env' });
+var dbUrl = process.env.DB_URL;
 var mongoose_1 = __importDefault(require("mongoose"));
+var faker_1 = __importDefault(require("faker"));
 // 'mongodb://localhost/contactos'
 mongoose_1.default
     .connect(dbUrl, {
@@ -13,368 +35,40 @@ mongoose_1.default
 })
     .catch(function (error) { return handleError(error); });
 var NuevoContactoMongo_1 = require("./NuevoContactoMongo");
-NuevoContactoMongo_1.Contacto.insertMany([
-    {
-        nombre: 'Alberto',
-        apellido: 'Lamberti',
-        apodo: 'beto',
-        nacimiento: '24/07/1951',
-        edad: 69,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Alejandro',
-        apellido: 'Villafañe',
-        apodo: 'Ale',
-        nacimiento: '28/11/1970',
-        edad: 50,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Lucia',
-        apellido: 'Villafañe',
-        apodo: 'Luci',
-        nacimiento: '23/08/2004',
-        edad: 16,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Luisina',
-        apellido: 'Aliprandi',
-        apodo: 'Luisi',
-        nacimiento: '19/02/2003',
-        edad: 18,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Laura',
-        apellido: 'Lamberti',
-        apodo: 'Lau',
-        nacimiento: '20/03/1978',
-        edad: 43,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Guadalupe',
-        apellido: 'Villafañe',
-        apodo: 'Guadi',
-        nacimiento: '17/10/2008',
-        edad: 12,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Mario',
-        apellido: 'Kempes',
-        apodo: 'El Matador',
-        nacimiento: '1/01/1954',
-        edad: 66,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Pablo',
-        apellido: 'Lamberti',
-        apodo: 'Huevon',
-        nacimiento: '3/04/1987',
-        edad: 34,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Nicolás',
-        apellido: 'Chiabrando',
-        apodo: 'Batán',
-        nacimiento: '25/05/2003',
-        edad: 18,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Santiago',
-        apellido: 'Carrasco',
-        apodo: 'Carri',
-        nacimiento: '30/11/2002',
-        edad: 18,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Franz',
-        apellido: 'Campos',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Aaron',
-        apellido: 'Esper',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Enrique',
-        apellido: 'Villalobos',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Elias',
-        apellido: 'Saldaña',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Edwin',
-        apellido: 'Martin',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Eduardo',
-        apellido: 'Cervera',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Edgar',
-        apellido: 'Aldatz',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Dylan',
-        apellido: 'Guzman',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Diego',
-        apellido: 'Gongora',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'David',
-        apellido: 'Laguillo',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Dario',
-        apellido: 'Castellanos',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Daniel',
-        apellido: 'Espinosa',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Cristian',
-        apellido: 'Del rio',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Cesar',
-        apellido: 'Maldonado',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Carlos',
-        apellido: 'Leffmans',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Bruno',
-        apellido: 'Vazquez',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Benjamin',
-        apellido: 'Gonzalez',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Bautista',
-        apellido: 'Gas',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Archie',
-        apellido: 'Varela',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Antonio',
-        apellido: 'Setien',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Andres',
-        apellido: 'Cruz',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Alvaro',
-        apellido: 'Gomez',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Alonso',
-        apellido: 'Aguirre',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Alfredo',
-        apellido: 'Aguilar',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Alejandro',
-        apellido: 'Aguayo',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Alberto',
-        apellido: 'Abreu',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Agustin',
-        apellido: 'Francis',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Adrian',
-        apellido: 'Rodriguez',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Abel',
-        apellido: 'Flores',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-    {
-        nombre: 'Adam',
-        apellido: 'Fernandez',
-        apodo: 'cualquiera',
-        nacimiento: '1/01/2000',
-        edad: 75,
-        telefono: 15638274,
-        direccion: 'calle ficticia 123',
-    },
-]);
+var fechaHoy = new Date();
+var dd = fechaHoy.getDate();
+var mm = fechaHoy.getMonth() + 1;
+var yyyy = fechaHoy.getFullYear();
+for (var i = 0; i < 50; i++) {
+    var dia = faker_1.default.datatype.number({
+        min: 1,
+        max: 31,
+    });
+    var mes = faker_1.default.datatype.number({
+        min: 1,
+        max: 12,
+    });
+    var año = faker_1.default.datatype.number({
+        min: 1950,
+        max: 2020,
+    });
+    var edadActual = yyyy - Number(año);
+    if (mm <= mes || dd < dia) {
+        edadActual -= 1;
+    }
+    NuevoContactoMongo_1.Contacto.insertMany([
+        {
+            nombre: faker_1.default.name.firstName(),
+            apellido: faker_1.default.name.lastName(),
+            apodo: 'dbajsd',
+            email: faker_1.default.internet.email(),
+            nacimiento: dia + "/" + mes + "/" + año,
+            edad: edadActual,
+            telefono: 15638274,
+            direccion: faker_1.default.address.streetAddress(),
+        },
+    ]);
+}
 function handleError(error) {
     throw new Error('Function not implemented.');
 }

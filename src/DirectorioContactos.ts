@@ -19,6 +19,7 @@ import { eliminarContacto } from './EliminarContacto';
 import nodemailer from 'nodemailer';
 import xlsx from 'xlsx';
 import fs from 'fs';
+import { execSync } from 'child_process';
 
 const mail = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -95,6 +96,12 @@ export const menuDirectorio = () => {
   });
 };
 
+// tslint:disable-next-line: no-shadowed-variable
+const mandarMail = (mail: string) => {
+  execSync(`xdg-email "mailto:${mail}"`);
+  verContactos();
+};
+
 const importarContacto = async () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
 
@@ -120,7 +127,7 @@ const importarContacto = async () => {
     const workbookSheets = workbook.SheetNames;
     const sheet = workbookSheets[0];
     const dataExcel: any = xlsx.utils.sheet_to_json(workbook.Sheets[sheet]);
-    let seGuardo = false;
+    const seGuardo = false;
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < dataExcel.length; i++) {
       const nombre1: string = dataExcel[i].Nombre;
@@ -366,6 +373,7 @@ const mostrarContacto = async (num: number) => {
       console.log(`Nombre: ${contactos[i].nombre}`);
       console.log(`Apellido: ${contactos[i].apellido}`);
       console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Email: ${contactos[i].email}`);
       console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
       console.log(`Edad: ${contactos[i].edad}`);
       console.log(`Telefono: ${contactos[i].telefono}`);
@@ -378,8 +386,9 @@ const mostrarContacto = async (num: number) => {
   console.log('');
   console.log('1 - Editar contacto');
   console.log('2 - Eliminar contacto');
-  console.log('3 - Volver a todos los contactos');
-  console.log('4 - Volver al menu principal');
+  console.log('3 - Enviar mail al contacto');
+  console.log('4 - Volver a todos los contactos');
+  console.log('5 - Volver al menu principal');
 
   if (menu) menu.close();
 
@@ -398,9 +407,12 @@ const mostrarContacto = async (num: number) => {
         eliminarContacto(contactos[i - 1]._id);
         break;
       case '3':
-        verContactos();
+        mandarMail(contactos[i - 1].email);
         break;
       case '4':
+        verContactos();
+        break;
+      case '5':
         menuPrin();
         break;
       default:
