@@ -39,50 +39,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.eliminarContacto = void 0;
-var readline_1 = __importDefault(require("readline"));
-var DirectorioContactos_1 = require("./DirectorioContactos");
+exports.pregunta = void 0;
 var MenuPrincipal_1 = require("./MenuPrincipal");
-var NuevoContactoMongo_1 = require("./NuevoContactoMongo");
+var readline_1 = __importDefault(require("readline"));
 // tslint:disable-next-line: no-var-requires
-var ObjectId = require('mongodb').ObjectId;
+var term = require('terminal-kit').terminal;
 var menu;
-var eliminarContacto = function (id) {
-    process.stdout.write('\u001B[2J\u001B[0;0f');
-    if (menu)
-        menu.close();
-    menu = readline_1.default.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        terminal: false,
+var pregunta = function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                process.stdout.write('\u001B[2J\u001B[0;0f');
+                if (menu)
+                    menu.close();
+                menu = readline_1.default.createInterface({
+                    input: process.stdin,
+                    output: process.stdout,
+                    terminal: false,
+                });
+                return [4 /*yield*/, term.drawImage('https://www.idlememe.com/wp-content/uploads/2021/09/crying-emoji-meme-idlememe-7-300x295.jpg', {
+                        shrink: { width: 30, height: 30 },
+                    })];
+            case 1:
+                _a.sent();
+                menu.question('Esta seguro de que quiere salir? y/n: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        if (input === 'y') {
+                            process.exit();
+                        }
+                        else if (input === 'n') {
+                            (0, MenuPrincipal_1.menuPrin)();
+                        }
+                        else {
+                            (0, exports.pregunta)();
+                        }
+                        return [2 /*return*/];
+                    });
+                }); });
+                return [2 /*return*/];
+        }
     });
-    menu.question('Esta seguro de eliminar el contacto? y/n: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
-        var contacto;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!(input === 'y')) return [3 /*break*/, 4];
-                    return [4 /*yield*/, NuevoContactoMongo_1.Contacto.find({ _id: ObjectId(id) })];
-                case 1:
-                    contacto = _a.sent();
-                    return [4 /*yield*/, (0, MenuPrincipal_1.menuPrin)(">Contacto \"" + contacto[0].nombre + " " + contacto[0].apellido + "\" eliminado con exito<")];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, NuevoContactoMongo_1.Contacto.deleteOne(contacto[0])];
-                case 3:
-                    _a.sent();
-                    return [3 /*break*/, 5];
-                case 4:
-                    if (input === 'n') {
-                        (0, DirectorioContactos_1.verContactos)();
-                    }
-                    else {
-                        (0, DirectorioContactos_1.verContactos)();
-                    }
-                    _a.label = 5;
-                case 5: return [2 /*return*/];
-            }
-        });
-    }); });
-};
-exports.eliminarContacto = eliminarContacto;
+}); };
+exports.pregunta = pregunta;

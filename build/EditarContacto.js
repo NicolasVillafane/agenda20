@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.editarContacto = void 0;
 var readline_1 = __importDefault(require("readline"));
+var DirectorioContactos_1 = require("./DirectorioContactos");
 var MenuPrincipal_1 = require("./MenuPrincipal");
 var NuevoContactoMongo_1 = require("./NuevoContactoMongo");
 // tslint:disable-next-line: no-var-requires
@@ -62,6 +63,7 @@ var editarContacto = function (id) { return __awaiter(void 0, void 0, void 0, fu
                 menu = readline_1.default.createInterface({
                     input: process.stdin,
                     output: process.stdout,
+                    terminal: false,
                 });
                 fechaHoy = new Date();
                 dd = String(fechaHoy.getDate()).padStart(2, '0');
@@ -73,7 +75,8 @@ var editarContacto = function (id) { return __awaiter(void 0, void 0, void 0, fu
                 process.stdin.setRawMode(true);
                 process.stdin.on('keypress', function (chunk, key) {
                     if (key.name === 'escape') {
-                        (0, MenuPrincipal_1.menuPrin)();
+                        menu.close();
+                        (0, DirectorioContactos_1.verContactos)();
                     }
                 });
                 nombre = function () {

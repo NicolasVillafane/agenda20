@@ -50,11 +50,11 @@ var nuevoContacto = function () {
     process.stdout.write('\u001B[2J\u001B[0;0f');
     if (menu)
         menu.close();
-    if (menu)
-        process.stdin.destroy();
+    // if (menu) process.stdin.destroy();
     menu = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout,
+        terminal: false,
     });
     var fechaHoy = new Date();
     var dd = String(fechaHoy.getDate()).padStart(2, '0');
@@ -63,9 +63,9 @@ var nuevoContacto = function () {
     fechaHoy = dd + "/" + mm + "/" + yyyy;
     console.log('Ingrese los datos del nuevo contacto o presione esc para volver al menu: ');
     console.log('');
-    process.stdin.setRawMode(true);
     process.stdin.on('keypress', function (chunk, key) {
         if (key.name === 'escape') {
+            menu.close();
             (0, MenuPrincipal_1.menuPrin)();
         }
     });

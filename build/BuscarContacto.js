@@ -54,11 +54,14 @@ var buscarContacto = function () {
     console.log('2 - Buscar contacto por apellido');
     console.log('3 - Volver al menu principal');
     console.log('*****************');
-    if (menu)
+    if (menu) {
         menu.close();
+        menu.removeAllListeners();
+    }
     menu = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout,
+        terminal: false,
     });
     menu.question('Opcion: ', function (input) {
         switch (input) {
@@ -85,6 +88,7 @@ var buscarContactoApellido = function () {
     menu = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout,
+        terminal: false,
     });
     menu.question('Ingrese un apellido: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
         var nameRegex, contactos, i;
@@ -136,6 +140,7 @@ var buscarContactoNombre = function () {
     menu = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout,
+        terminal: false,
     });
     menu.question('Ingrese un nombre: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
         var nameRegex, contactos, i;
@@ -195,6 +200,7 @@ var mostrarContactoIndividualApellido = function (num, ape) { return __awaiter(v
                         console.log("Nombre: " + contactos[i].nombre);
                         console.log("Apellido: " + contactos[i].apellido);
                         console.log("Apodo: " + contactos[i].apodo);
+                        console.log("Email: " + contactos[i].email);
                         console.log("A\u00F1o de Nacimiento: " + contactos[i].nacimiento);
                         console.log("Edad: " + contactos[i].edad);
                         console.log("Telefono: " + contactos[i].telefono);
@@ -208,13 +214,13 @@ var mostrarContactoIndividualApellido = function (num, ape) { return __awaiter(v
                 console.log('');
                 console.log('1 - Editar contacto');
                 console.log('2 - Eliminar contacto');
-                console.log('3 - Volver a todos los contactos');
-                console.log('4 - Volver al menu principal');
-                if (menu)
-                    menu.close();
+                console.log('3 - Enviar mail al contacto');
+                console.log('4 - Volver a todos los contactos');
+                console.log('5 - Volver al menu principal');
                 menu = readline_1.default.createInterface({
                     input: process.stdin,
                     output: process.stdout,
+                    terminal: false,
                 });
                 menu.question('Opcion: ', function (input) {
                     switch (input) {
@@ -225,9 +231,12 @@ var mostrarContactoIndividualApellido = function (num, ape) { return __awaiter(v
                             (0, EliminarContacto_1.eliminarContacto)(contactos[i - 1]._id);
                             break;
                         case '3':
-                            (0, DirectorioContactos_1.verContactos)();
+                            (0, DirectorioContactos_1.mandarMail)(contactos[i - 1].email);
                             break;
                         case '4':
+                            (0, DirectorioContactos_1.verContactos)();
+                            break;
+                        case '5':
                             (0, MenuPrincipal_1.menuPrin)();
                             break;
                         default:
@@ -254,6 +263,7 @@ var mostrarContactoIndividual = function (num, nomb) { return __awaiter(void 0, 
                         console.log("Nombre: " + contactos[i].nombre);
                         console.log("Apellido: " + contactos[i].apellido);
                         console.log("Apodo: " + contactos[i].apodo);
+                        console.log("Email: " + contactos[i].email);
                         console.log("A\u00F1o de Nacimiento: " + contactos[i].nacimiento);
                         console.log("Edad: " + contactos[i].edad);
                         console.log("Telefono: " + contactos[i].telefono);
@@ -267,13 +277,13 @@ var mostrarContactoIndividual = function (num, nomb) { return __awaiter(void 0, 
                 console.log('');
                 console.log('1 - Editar contacto');
                 console.log('2 - Eliminar contacto');
-                console.log('3 - Volver a todos los contactos');
-                console.log('4 - Volver al menu principal');
-                if (menu)
-                    menu.close();
+                console.log('3 - Enviar mail al contacto');
+                console.log('4 - Volver a todos los contactos');
+                console.log('5 - Volver al menu principal');
                 menu = readline_1.default.createInterface({
                     input: process.stdin,
                     output: process.stdout,
+                    terminal: false,
                 });
                 menu.question('Opcion: ', function (input) {
                     switch (input) {
@@ -284,9 +294,12 @@ var mostrarContactoIndividual = function (num, nomb) { return __awaiter(void 0, 
                             (0, EliminarContacto_1.eliminarContacto)(contactos[i - 1]._id);
                             break;
                         case '3':
-                            (0, DirectorioContactos_1.verContactos)();
+                            (0, DirectorioContactos_1.mandarMail)(contactos[i - 1].email);
                             break;
                         case '4':
+                            (0, DirectorioContactos_1.verContactos)();
+                            break;
+                        case '5':
                             (0, MenuPrincipal_1.menuPrin)();
                             break;
                         default:

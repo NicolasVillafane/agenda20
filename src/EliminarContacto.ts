@@ -14,6 +14,7 @@ export const eliminarContacto = (id: any) => {
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
   menu.question('Esta seguro de eliminar el contacto? y/n: ', async (input) => {
     if (input === 'y') {

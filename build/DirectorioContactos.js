@@ -58,7 +58,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mostrarContacto = exports.verContactos = exports.menuDirectorio = void 0;
+exports.mostrarContacto = exports.verContactos = exports.mandarMail = exports.menuDirectorio = void 0;
 var dotenv = __importStar(require("dotenv"));
 dotenv.config({ path: __dirname + '/.env' });
 var dbUrl = process.env.DB_URL;
@@ -108,42 +108,43 @@ var nombresFreno = [];
 var menu;
 var menuDirectorio = function () {
     process.stdout.write('\u001B[2J\u001B[0;0f');
-    var items = [
-        'Ver todos los contactos',
-        'Ver una letra',
-        'Volver al menu principal',
-        'Exportar contactos',
-        'Importar contactos',
-    ];
-    var options = {
-        y: 3,
-        style: term.inverse,
-        selectedStyle: term.dim.blue.bgGreen,
-    };
-    term.singleLineMenu(items, options, function (_error, response) {
-        if (response.selectedIndex === 0) {
-            (0, exports.verContactos)();
-        }
-        else if (response.selectedIndex === 1) {
-            verLetra();
-        }
-        else if (response.selectedIndex === 2) {
-            (0, MenuPrincipal_1.menuPrin)();
-        }
-        else if (response.selectedIndex === 3) {
-            hojaExcel();
-        }
-        else {
-            importarContacto();
-        }
-    });
-    process.stdout.write('\u001B[2J\u001B[0;0f');
     console.log('*****************');
     console.log('Directorio de contactos');
     console.log('');
+    console.log('1 - Ver todos los contactos');
+    console.log('2 - Ver una letra');
+    console.log('3 - Volver al menu principal');
+    console.log('4 - Exportar contactos');
+    console.log('5 - Importar contactos');
     console.log('*****************');
     if (menu)
         menu.close();
+    menu = readline_1.default.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        terminal: false,
+    });
+    menu.question('Opcion: ', function (input) {
+        switch (input) {
+            case '1':
+                (0, exports.verContactos)();
+                break;
+            case '2':
+                verLetra();
+                break;
+            case '3':
+                (0, MenuPrincipal_1.menuPrin)();
+                break;
+            case '4':
+                hojaExcel();
+                break;
+            case '5':
+                importarContacto();
+                break;
+            default:
+                (0, exports.menuDirectorio)();
+        }
+    });
 };
 exports.menuDirectorio = menuDirectorio;
 // tslint:disable-next-line: no-shadowed-variable
@@ -151,34 +152,41 @@ var mandarMail = function (mail) {
     (0, child_process_1.execSync)("xdg-email \"mailto:" + mail + "\"");
     (0, exports.verContactos)();
 };
+exports.mandarMail = mandarMail;
 var importarContacto = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         process.stdout.write('\u001B[2J\u001B[0;0f');
-        if (menu)
+        if (menu) {
             menu.close();
+            menu.removeAllListeners();
+        }
         menu = readline_1.default.createInterface({
             input: process.stdin,
             output: process.stdout,
             terminal: false,
         });
-        console.log('Ingrese la localizacion del archivo de importacion.');
+        console.log('Ingrese la localizacion del archivo de importacion, o presione esc para volver');
         console.log('ej: "/home/user/Documents/importar.xlsx"');
         console.log('');
-        console.log('>En caso de haber un error solo se guardaran aquellos contactos que cumplan con las validaciones<');
         console.log('');
+        process.stdin.on('keypress', function (chunk, key) {
+            if (key.name === 'escape') {
+                (0, exports.menuDirectorio)();
+            }
+        });
         menu.question('Localizacion: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
-            var path, workbook, workbookSheets, sheet, dataExcel, seGuardo, _loop_1, i;
+            var path, workbook, workbookSheets, sheet, dataExcel, _loop_1, i, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 5, , 6]);
                         path = input;
                         workbook = xlsx_1.default.readFile(path);
                         workbookSheets = workbook.SheetNames;
                         sheet = workbookSheets[0];
                         dataExcel = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet]);
-                        seGuardo = false;
                         _loop_1 = function (i) {
-                            var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1, fechaHoy, dd, mm, yyyy, val1, val2, val3, edadActual_1, calcularEdad;
+                            var nombre1, apellido1, apodo1, diaN, mesN, añoN, telefono1, direccion1, email1, fechaHoy, dd, mm, yyyy, val1, val2, val3, edadActual_1, calcularEdad;
                             return __generator(this, function (_b) {
                                 switch (_b.label) {
                                     case 0:
@@ -190,6 +198,7 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                                         añoN = dataExcel[i].Año;
                                         telefono1 = dataExcel[i].Telefono;
                                         direccion1 = dataExcel[i].Direccion;
+                                        email1 = dataExcel[i].Email;
                                         fechaHoy = new Date();
                                         dd = String(fechaHoy.getDate()).padStart(2, '0');
                                         mm = String(fechaHoy.getMonth() + 1).padStart(2, '0');
@@ -223,7 +232,10 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                                             telefono1.toString().length === 8 &&
                                             isNaN(Number(direccion1)) === true &&
                                             direccion1 &&
-                                            direccion1.length <= 30)) return [3 /*break*/, 4];
+                                            direccion1.length <= 30 &&
+                                            email1 &&
+                                            email1.includes('@') &&
+                                            email1.includes('.'))) return [3 /*break*/, 4];
                                         edadActual_1 = yyyy - Number(añoN);
                                         calcularEdad = function () {
                                             if (Number(mm) <= mesN || Number(dd) < diaN) {
@@ -237,6 +249,7 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                                                 nombre: nombre1,
                                                 apellido: apellido1,
                                                 apodo: apodo1,
+                                                email: email1,
                                                 nacimiento: diaN + "/" + mesN + "/" + añoN,
                                                 edad: edadActual_1,
                                                 telefono: telefono1,
@@ -268,7 +281,12 @@ var importarContacto = function () { return __awaiter(void 0, void 0, void 0, fu
                         return [3 /*break*/, 1];
                     case 4:
                         fs_1.default.unlinkSync(input);
-                        return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 5:
+                        err_1 = _a.sent();
+                        importarContacto();
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         }); });
@@ -279,16 +297,25 @@ var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function 
     var inputMail;
     return __generator(this, function (_a) {
         process.stdout.write('\u001B[2J\u001B[0;0f');
+        if (menu)
+            menu.close();
         menu = readline_1.default.createInterface({
             input: process.stdin,
             output: process.stdout,
             terminal: false,
+        });
+        process.stdin.on('keypress', function (chunk, key) {
+            if (key.name === 'escape') {
+                menu.close();
+                (0, exports.menuDirectorio)();
+            }
         });
         menu.question('Ingrese su direccion mail: ', function (input) { return __awaiter(void 0, void 0, void 0, function () {
             var contactos, colNum, i, mailOptions;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!(input && input.includes('@') === true && input.includes('.') === true)) return [3 /*break*/, 14];
                         inputMail = input;
                         ws.cell(1, 1).string('Nombre').style(style);
                         ws.cell(1, 2).string('Apellido').style(style);
@@ -296,6 +323,7 @@ var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function 
                         ws.cell(1, 4).string('Nacimiento').style(style);
                         ws.cell(1, 5).string('Telefono').style(style);
                         ws.cell(1, 6).string('Direccion').style(style);
+                        ws.cell(1, 7).string('Email').style(style);
                         return [4 /*yield*/, NuevoContactoMongo_1.Contacto.find({}).sort({ nombre: 1 })];
                     case 1:
                         contactos = _a.sent();
@@ -303,7 +331,7 @@ var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function 
                         i = 0;
                         _a.label = 2;
                     case 2:
-                        if (!(i < contactos.length)) return [3 /*break*/, 10];
+                        if (!(i < contactos.length)) return [3 /*break*/, 11];
                         return [4 /*yield*/, ws.cell(colNum, 1).string(contactos[i].nombre).style(style)];
                     case 3:
                         _a.sent();
@@ -322,16 +350,19 @@ var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function 
                         return [4 /*yield*/, ws.cell(colNum, 6).string(contactos[i].direccion).style(style)];
                     case 8:
                         _a.sent();
-                        colNum += 1;
-                        _a.label = 9;
+                        return [4 /*yield*/, ws.cell(colNum, 7).string(contactos[i].email).style(style)];
                     case 9:
+                        _a.sent();
+                        colNum += 1;
+                        _a.label = 10;
+                    case 10:
                         i++;
                         return [3 /*break*/, 2];
-                    case 10: return [4 /*yield*/, wb.write(__dirname + '/contactos.xlsx')];
-                    case 11:
+                    case 11: return [4 /*yield*/, wb.write(__dirname + '/contactos.xlsx')];
+                    case 12:
                         _a.sent();
                         mailOptions = {
-                            from: 'nivi1023@gmail.com',
+                            from: 'agendacontactera@gmail.com',
                             to: inputMail,
                             subject: 'Contactos exportados',
                             text: '',
@@ -347,13 +378,17 @@ var hojaExcel = function () { return __awaiter(void 0, void 0, void 0, function 
                                     console.log(error);
                                 }
                                 else {
-                                    console.log('Email sent: ' + info.response);
+                                    fs_1.default.unlinkSync(__dirname + '/contactos.xlsx');
                                 }
                             })];
-                    case 12:
+                    case 13:
                         _a.sent();
                         (0, MenuPrincipal_1.menuPrin)('excel generado');
-                        return [2 /*return*/];
+                        return [3 /*break*/, 15];
+                    case 14:
+                        hojaExcel();
+                        _a.label = 15;
+                    case 15: return [2 /*return*/];
                 }
             });
         }); });
@@ -430,6 +465,7 @@ var verContactos = function (num, num2) {
                         }
                         else if (input === 'x') {
                             nombresFreno = [];
+                            menu.close();
                             (0, MenuPrincipal_1.menuPrin)();
                         }
                         else if (isNaN(Number(input)) === false && input) {
@@ -512,8 +548,6 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
                 console.log('3 - Enviar mail al contacto');
                 console.log('4 - Volver a todos los contactos');
                 console.log('5 - Volver al menu principal');
-                if (menu)
-                    menu.close();
                 menu = readline_1.default.createInterface({
                     input: process.stdin,
                     output: process.stdout,
@@ -528,7 +562,7 @@ var mostrarContacto = function (num) { return __awaiter(void 0, void 0, void 0, 
                             (0, EliminarContacto_1.eliminarContacto)(contactos[i - 1]._id);
                             break;
                         case '3':
-                            mandarMail(contactos[i - 1].email);
+                            (0, exports.mandarMail)(contactos[i - 1].email);
                             break;
                         case '4':
                             (0, exports.verContactos)();

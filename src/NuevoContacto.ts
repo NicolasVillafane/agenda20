@@ -17,11 +17,12 @@ let nombre1: string,
 export const nuevoContacto = () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
   if (menu) menu.close();
-  if (menu) process.stdin.destroy();
+  // if (menu) process.stdin.destroy();
 
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
 
   let fechaHoy: Date | string = new Date();
@@ -35,9 +36,10 @@ export const nuevoContacto = () => {
     'Ingrese los datos del nuevo contacto o presione esc para volver al menu: '
   );
   console.log('');
-  process.stdin.setRawMode(true);
+
   process.stdin.on('keypress', (chunk, key) => {
     if (key.name === 'escape') {
+      menu.close();
       menuPrin();
     }
   });

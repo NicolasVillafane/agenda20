@@ -1,4 +1,5 @@
 import readline from 'readline';
+import { verContactos } from './DirectorioContactos';
 import { menuPrin } from './MenuPrincipal';
 import { Contacto } from './NuevoContactoMongo';
 // tslint:disable-next-line: no-var-requires
@@ -25,6 +26,7 @@ export const editarContacto = async (id: any) => {
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
 
   let fechaHoy: Date | string = new Date();
@@ -42,7 +44,8 @@ export const editarContacto = async (id: any) => {
 
   process.stdin.on('keypress', (chunk, key) => {
     if (key.name === 'escape') {
-      menuPrin();
+      menu.close();
+      verContactos();
     }
   });
 

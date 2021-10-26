@@ -1,7 +1,11 @@
 import readline from 'readline';
 import { menuPrin } from './MenuPrincipal';
 import { Contacto } from './NuevoContactoMongo';
-import { verContactos, mostrarContacto } from './DirectorioContactos';
+import {
+  verContactos,
+  mostrarContacto,
+  mandarMail,
+} from './DirectorioContactos';
 import { eliminarContacto } from './EliminarContacto';
 import { editarContacto } from './EditarContacto';
 
@@ -15,11 +19,15 @@ export const buscarContacto = () => {
   console.log('3 - Volver al menu principal');
   console.log('*****************');
 
-  if (menu) menu.close();
+  if (menu) {
+    menu.close();
+    menu.removeAllListeners();
+  }
 
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
 
   menu.question('Opcion: ', (input) => {
@@ -48,6 +56,7 @@ const buscarContactoApellido = () => {
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
   menu.question('Ingrese un apellido: ', async (input) => {
     const nameRegex = new RegExp(input);
@@ -91,6 +100,7 @@ const buscarContactoNombre = () => {
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
 
   menu.question('Ingrese un nombre: ', async (input) => {
@@ -138,6 +148,7 @@ const mostrarContactoIndividualApellido = async (num: number, ape: any) => {
       console.log(`Nombre: ${contactos[i].nombre}`);
       console.log(`Apellido: ${contactos[i].apellido}`);
       console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Email: ${contactos[i].email}`);
       console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
       console.log(`Edad: ${contactos[i].edad}`);
       console.log(`Telefono: ${contactos[i].telefono}`);
@@ -150,14 +161,14 @@ const mostrarContactoIndividualApellido = async (num: number, ape: any) => {
   console.log('');
   console.log('1 - Editar contacto');
   console.log('2 - Eliminar contacto');
-  console.log('3 - Volver a todos los contactos');
-  console.log('4 - Volver al menu principal');
-
-  if (menu) menu.close();
+  console.log('3 - Enviar mail al contacto');
+  console.log('4 - Volver a todos los contactos');
+  console.log('5 - Volver al menu principal');
 
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
 
   menu.question('Opcion: ', (input) => {
@@ -169,9 +180,12 @@ const mostrarContactoIndividualApellido = async (num: number, ape: any) => {
         eliminarContacto(contactos[i - 1]._id);
         break;
       case '3':
-        verContactos();
+        mandarMail(contactos[i - 1].email);
         break;
       case '4':
+        verContactos();
+        break;
+      case '5':
         menuPrin();
         break;
       default:
@@ -191,6 +205,7 @@ const mostrarContactoIndividual = async (num: number, nomb: any) => {
       console.log(`Nombre: ${contactos[i].nombre}`);
       console.log(`Apellido: ${contactos[i].apellido}`);
       console.log(`Apodo: ${contactos[i].apodo}`);
+      console.log(`Email: ${contactos[i].email}`);
       console.log(`Año de Nacimiento: ${contactos[i].nacimiento}`);
       console.log(`Edad: ${contactos[i].edad}`);
       console.log(`Telefono: ${contactos[i].telefono}`);
@@ -203,14 +218,14 @@ const mostrarContactoIndividual = async (num: number, nomb: any) => {
   console.log('');
   console.log('1 - Editar contacto');
   console.log('2 - Eliminar contacto');
-  console.log('3 - Volver a todos los contactos');
-  console.log('4 - Volver al menu principal');
-
-  if (menu) menu.close();
+  console.log('3 - Enviar mail al contacto');
+  console.log('4 - Volver a todos los contactos');
+  console.log('5 - Volver al menu principal');
 
   menu = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false,
   });
 
   menu.question('Opcion: ', (input) => {
@@ -222,9 +237,12 @@ const mostrarContactoIndividual = async (num: number, nomb: any) => {
         eliminarContacto(contactos[i - 1]._id);
         break;
       case '3':
-        verContactos();
+        mandarMail(contactos[i - 1].email);
         break;
       case '4':
+        verContactos();
+        break;
+      case '5':
         menuPrin();
         break;
       default:
